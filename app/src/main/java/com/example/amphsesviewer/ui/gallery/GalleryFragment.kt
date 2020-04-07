@@ -10,9 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.amphsesviewer.App
 import com.example.amphsesviewer.R
 import com.example.amphsesviewer.databinding.FragmentGalleryBinding
-import com.example.amphsesviewer.feature.gallery.di.GalleryComponent
+import com.example.amphsesviewer.feature.di.FeatureComponentManager
 import com.example.amphsesviewer.feature.gallery.factory.GalleryViewModelFactory
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryAction
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryEvent
@@ -22,6 +23,7 @@ import com.example.amphsesviewer.ui.adapters.ImagesAdapter
 import javax.inject.Inject
 
 class GalleryFragment : Fragment() {
+
     private var binding: FragmentGalleryBinding? = null
 
     @Inject
@@ -29,6 +31,11 @@ class GalleryFragment : Fragment() {
 
     private val viewModel: GalleryViewModel by viewModels { galleryViewModelFactory }
     private lateinit var imagesAdapter: ImagesAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        FeatureComponentManager.component.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -56,11 +63,6 @@ class GalleryFragment : Fragment() {
     override fun onDestroyView() {
         binding = null
         super.onDestroyView()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        GalleryComponent.initializer(this)
     }
 
     private fun renderState(state: GalleryState) {

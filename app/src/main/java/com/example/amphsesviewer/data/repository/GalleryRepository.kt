@@ -1,5 +1,6 @@
 package com.example.amphsesviewer.data.repository
 
+import android.content.Context
 import android.graphics.Bitmap
 import com.example.amphsesviewer.domain.repository.IGalleryRepository
 import com.jakewharton.rxrelay2.PublishRelay
@@ -13,6 +14,7 @@ import javax.inject.Singleton
 
 @Singleton
 class GalleryRepository @Inject constructor(
+    val context: Context
 
 ) : IGalleryRepository {
 

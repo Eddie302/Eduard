@@ -21,8 +21,7 @@ import androidx.navigation.fragment.findNavController
 
 import com.example.amphsesviewer.REQUEST_GALLERY
 import com.example.amphsesviewer.databinding.LoadImageFragmentBinding
-import com.example.amphsesviewer.feature.loadimage.di.LoadImageComponent
-import com.example.amphsesviewer.feature.loadimage.domain.LoadImageInteractor
+import com.example.amphsesviewer.feature.di.FeatureComponentManager
 import com.example.amphsesviewer.feature.loadimage.factory.LoadImageViewModelFactory
 import com.example.amphsesviewer.feature.loadimage.viewmodel.LoadImageAction
 import com.example.amphsesviewer.feature.loadimage.viewmodel.LoadImageEvent
@@ -46,6 +45,11 @@ class LoadImageFragment : Fragment() {
                 viewModel(LoadImageEvent.ImageSelected(bitmap))
             }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        FeatureComponentManager.component.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -76,11 +80,6 @@ class LoadImageFragment : Fragment() {
                 renderState(it)
             })
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        LoadImageComponent.initializer(this)
     }
 
     private fun renderState(state: LoadImageState) {

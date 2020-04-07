@@ -16,8 +16,9 @@ interface DataComponent : DataDependency {
 
     companion object {
 
-        fun initializer(context: Context): DataComponent {
+        fun build(context: Context): DataComponent {
             return DaggerDataComponent.builder()
+                .repositoryModule(RepositoryModule())
                 .appModule(AppModule(context.applicationContext))
                 .build()
         }

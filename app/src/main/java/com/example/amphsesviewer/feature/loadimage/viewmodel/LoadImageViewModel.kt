@@ -1,11 +1,11 @@
 package com.example.amphsesviewer.feature.loadimage.viewmodel
 
 import android.graphics.Bitmap
+import com.example.amphsesviewer.feature.loadimage.domain.ILoadImageInteractor
 import com.example.amphsesviewer.ui.core.ViewAction
 import com.example.amphsesviewer.ui.core.ViewEvent
 import com.example.amphsesviewer.ui.core.ViewModelBase
 import com.example.amphsesviewer.ui.core.ViewState
-import com.example.amphsesviewer.feature.loadimage.domain.LoadImageInteractor
 
 sealed class LoadImageAction :
     ViewAction {
@@ -25,7 +25,7 @@ data class LoadImageState(
 ): ViewState
 
 class LoadImageViewModel(
-    private val interactor: LoadImageInteractor,
+    private val interactor: ILoadImageInteractor,
     initState: LoadImageState = LoadImageState(
         null
     )

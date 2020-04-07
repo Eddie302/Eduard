@@ -6,7 +6,9 @@ import com.example.amphsesviewer.ui.core.ViewEvent
 import com.example.amphsesviewer.ui.core.ViewModelBase
 import com.example.amphsesviewer.ui.core.ViewState
 import com.example.amphsesviewer.feature.gallery.domain.GalleryInteractor
+import com.example.amphsesviewer.feature.gallery.domain.IGalleryInteractor
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 sealed class GalleryEvent :
     ViewEvent {
@@ -23,9 +25,11 @@ data class GalleryState(
 ): ViewState
 
 class GalleryViewModel(
-    private val interactor: GalleryInteractor,
+    private val interactor: IGalleryInteractor,
     initState: GalleryState = GalleryState()
 ) : ViewModelBase<GalleryState, GalleryAction, GalleryEvent>(initState) {
+
+
 
     init {
         interactor.loadImages()

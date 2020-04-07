@@ -1,17 +1,18 @@
 package com.example.amphsesviewer.data.di
 
+import android.content.Context
 import com.example.amphsesviewer.data.repository.GalleryRepository
 import com.example.amphsesviewer.domain.repository.IGalleryRepository
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-interface RepositoryModule {
+class RepositoryModule {
 
     @Singleton
-    @Binds
-    fun bindGalleryRepository(
-        galleryRepository: GalleryRepository
-    ): IGalleryRepository
+    @Provides
+    fun provideGalleryRepository(context: Context): IGalleryRepository {
+        return GalleryRepository(context)
+    }
 }

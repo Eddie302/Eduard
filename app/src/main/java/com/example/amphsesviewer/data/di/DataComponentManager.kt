@@ -7,7 +7,7 @@ object DataComponentManager {
         private set
 
     fun initComponent(app: App) {
-        component = DataComponent.initializer(app)
+        component = DataComponent.build(app)
     }
 
 }
