@@ -6,11 +6,14 @@ import com.example.amphsesviewer.ui.core.ViewAction
 import com.example.amphsesviewer.ui.core.ViewEvent
 import com.example.amphsesviewer.ui.core.ViewModelBase
 import com.example.amphsesviewer.ui.core.ViewState
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 sealed class LoadImageAction :
     ViewAction {
     object OpenGallery : LoadImageAction()
     object NavigateBack: LoadImageAction()
+    data class ShowError(val t: Throwable): LoadImageAction()
 }
 
 sealed class LoadImageEvent:
@@ -36,9 +39,12 @@ class LoadImageViewModel(
     }
 
     private fun saveImage(bitmap: Bitmap?){
-        compositeDisposable.add(interactor.saveBitmap(bitmap).subscribe {
+        compositeDisposable.add(interactor.saveBitmap(bitmap).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).subscribe({
             sendAction(LoadImageAction.NavigateBack)
+        }, {
+            sendAction(LoadImageAction.ShowError(it))
         })
+        )
     }
 
     override fun invoke(event: LoadImageEvent) {

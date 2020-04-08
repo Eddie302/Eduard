@@ -3,7 +3,7 @@ package com.example.amphsesviewer.ui.core
 import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.*
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.util.concurrent.atomic.AtomicBoolean
 
 interface ViewState

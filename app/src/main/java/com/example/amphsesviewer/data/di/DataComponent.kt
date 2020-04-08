@@ -11,7 +11,7 @@ interface DataDependency {
 }
 
 @Singleton
-@Component(modules = [RepositoryModule::class, AppModule::class])
+@Component(modules = [RepositoryModule::class, StorageModule::class, AppModule::class])
 interface DataComponent : DataDependency {
 
     companion object {
@@ -19,6 +19,7 @@ interface DataComponent : DataDependency {
         fun build(context: Context): DataComponent {
             return DaggerDataComponent.builder()
                 .repositoryModule(RepositoryModule())
+                .storageModule(StorageModule())
                 .appModule(AppModule(context.applicationContext))
                 .build()
         }

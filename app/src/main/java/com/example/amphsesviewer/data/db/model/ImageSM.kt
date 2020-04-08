@@ -5,6 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "image")
 data class ImageSM(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Long = 0
 )

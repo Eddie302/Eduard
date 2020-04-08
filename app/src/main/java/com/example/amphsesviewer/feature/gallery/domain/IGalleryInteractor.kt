@@ -1,12 +1,15 @@
 package com.example.amphsesviewer.feature.gallery.domain
 
 import android.graphics.Bitmap
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Single
+import com.example.amphsesviewer.domain.model.ImageData
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Single
+
 
 interface IGalleryInteractor {
-    fun loadImages() : Single<List<Bitmap>>
-    fun getImageReceiver() : Flowable<Bitmap>
+    fun loadImagesData() : Single<List<ImageData>>
+//    fun getImageReceiver() : Flowable<Bitmap>
     fun saveBitmap(bitmap: Bitmap): Completable
+    fun loadBitmap(id: String): Single<Bitmap?>
 }

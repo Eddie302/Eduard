@@ -3,7 +3,7 @@ package com.example.amphsesviewer.feature.loadimage.domain
 import android.graphics.Bitmap
 import com.example.amphsesviewer.data.repository.GalleryRepository
 import com.example.amphsesviewer.domain.repository.IGalleryRepository
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import java.io.File
 import javax.inject.Inject
 
