@@ -43,7 +43,7 @@ class GalleryFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val layoutManager = GridLayoutManager(context, 4)
+        val layoutManager = GridLayoutManager(context, 3)
         imagesAdapter = ImagesAdapter(context)
         viewModel.run {
             action.observe(viewLifecycleOwner, Observer {
