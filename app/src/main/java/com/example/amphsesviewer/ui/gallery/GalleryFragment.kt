@@ -1,6 +1,7 @@
 package com.example.amphsesviewer.ui.gallery
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryEvent
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryState
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryViewModel
 import com.example.amphsesviewer.ui.adapters.ImagesAdapter
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class GalleryFragment : Fragment() {
@@ -67,16 +69,22 @@ class GalleryFragment : Fragment() {
     }
 
     private fun renderState(state: GalleryState) {
-        imagesAdapter.run{
-            images = state.images
-            notifyDataSetChanged()
-        }
+//        imagesAdapter.run{
+//            images.clear()
+//            notifyDataSetChanged()
+//            images.addAll(state.images)
+//            notifyDataSetChanged()
+//        }
     }
 
-    private fun processAction(action: GalleryAction) {
-        when (action) {
-            is GalleryAction.OpenImageLoader -> findNavController().navigate(R.id.action_nav_gallery_to_loadImage)
-            is GalleryAction.ShowError -> Toast.makeText(context, action.t.message, Toast.LENGTH_LONG).show()
+    private fun processAction(action: GalleryAction) = when (action) {
+        is GalleryAction.OpenImageLoader -> findNavController().navigate(R.id.action_nav_gallery_to_loadImage)
+        is GalleryAction.ImageAdded -> {
+            imagesAdapter.run {
+                images.add(Pair(action.imageId, action.imageRef))
+                notifyItemInserted(images.size - 1)
+            }
         }
+        is GalleryAction.ShowError -> Toast.makeText(context, action.t.message, Toast.LENGTH_LONG).show()
     }
 }

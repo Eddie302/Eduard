@@ -9,7 +9,11 @@ import com.example.amphsesviewer.domain.model.ImageData
 import com.example.amphsesviewer.domain.repository.IGalleryRepository
 import com.jakewharton.rxrelay2.PublishRelay
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
-import io.reactivex.rxjava3.core.*
+import io.reactivex.BackpressureStrategy
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Completable
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -26,9 +30,9 @@ class GalleryRepository @Inject constructor(
 
     private val bitmapRelay: PublishRelay<Bitmap> = PublishRelay.create()
 
-//    override fun bitmap(): Flowable<Bitmap> {
-//        return bitmapRelay.toFlowable(BackpressureStrategy.LATEST)
-//    }
+    override fun newImageProvider(): Flowable<Bitmap> {
+        return RxJavaBridge.toV3Flowable(bitmapRelay.toFlowable(BackpressureStrategy.LATEST))
+    }
 
     override fun loadImagesData(): Single<List<ImageData>> {
         return RxJavaBridge.toV3Single(databaseStorage.imageDao().getAll())
