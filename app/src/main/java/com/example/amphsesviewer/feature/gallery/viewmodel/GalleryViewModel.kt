@@ -55,15 +55,22 @@ class GalleryViewModel(
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
-                        { addBitmap(it, imageData.id) },
+                        { addBitmap(imageData.id, it) },
                         { sendAction(GalleryAction.ShowError(it)) }
                     )
             }, {
                 sendAction(GalleryAction.ShowError(it))
             })
+
+        interactor.newImageProvider
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe() {
+                addBitmap(it.id, it.bitmap)
+            }
     }
 
-    private fun addBitmap (bitmap: Bitmap?, id: Long) {
+    private fun addBitmap (id: Long, bitmap: Bitmap?) {
         bitmap?.let {
             imagesMap[id] = it
             sendNewState {

@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.core.Single
 
 
 interface IGalleryRepository {
-    fun newImageProvider(): Flowable<Bitmap>
+    val newImageProvider: Flowable<ImageData>
     fun saveBitmap(bitmap: Bitmap?) : Completable
     fun loadImagesData(): Single<List<ImageData>>
     fun loadBitmap(id: Long) : Single<Bitmap?>
