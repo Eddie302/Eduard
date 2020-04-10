@@ -1,11 +1,11 @@
 package com.example.amphsesviewer.feature.loadimage.viewmodel
 
 import android.graphics.Bitmap
-import com.example.amphsesviewer.feature.loadimage.domain.ILoadImageInteractor
-import com.example.amphsesviewer.ui.core.ViewAction
-import com.example.amphsesviewer.ui.core.ViewEvent
-import com.example.amphsesviewer.ui.core.ViewModelBase
-import com.example.amphsesviewer.ui.core.ViewState
+import com.example.amphsesviewer.feature.loadimage.interactor.ILoadImageInteractor
+import com.example.amphsesviewer.feature.ViewAction
+import com.example.amphsesviewer.feature.ViewEvent
+import com.example.amphsesviewer.feature.ViewModelBase
+import com.example.amphsesviewer.feature.ViewState
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 

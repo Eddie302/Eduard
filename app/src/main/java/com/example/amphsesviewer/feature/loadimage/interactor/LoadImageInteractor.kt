@@ -1,10 +1,8 @@
-package com.example.amphsesviewer.feature.loadimage.domain
+package com.example.amphsesviewer.feature.loadimage.interactor
 
 import android.graphics.Bitmap
-import com.example.amphsesviewer.data.repository.GalleryRepository
 import com.example.amphsesviewer.domain.repository.IGalleryRepository
 import io.reactivex.rxjava3.core.Completable
-import java.io.File
 import javax.inject.Inject
 
 class LoadImageInteractor @Inject constructor(

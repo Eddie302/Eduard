@@ -1,11 +1,9 @@
-package com.example.amphsesviewer.feature.gallery.factory
+package com.example.amphsesviewer.feature.gallery.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.amphsesviewer.feature.gallery.domain.IGalleryInteractor
-import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryViewModel
+import com.example.amphsesviewer.feature.gallery.interactor.IGalleryInteractor
 import javax.inject.Inject
-import javax.inject.Provider
 
 class GalleryViewModelFactory @Inject constructor(private val interactor: IGalleryInteractor) : ViewModelProvider.Factory {
 

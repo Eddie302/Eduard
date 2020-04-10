@@ -23,7 +23,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.amphsesviewer.REQUEST_GALLERY
 import com.example.amphsesviewer.databinding.LoadImageFragmentBinding
 import com.example.amphsesviewer.feature.di.FeatureComponentManager
-import com.example.amphsesviewer.feature.loadimage.factory.LoadImageViewModelFactory
+import com.example.amphsesviewer.feature.loadimage.viewmodel.LoadImageViewModelFactory
 import com.example.amphsesviewer.feature.loadimage.viewmodel.LoadImageAction
 import com.example.amphsesviewer.feature.loadimage.viewmodel.LoadImageEvent
 import com.example.amphsesviewer.feature.loadimage.viewmodel.LoadImageState

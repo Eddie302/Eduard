@@ -1,4 +1,4 @@
-package com.example.amphsesviewer.ui.core
+package com.example.amphsesviewer.feature
 
 import android.util.Log
 import androidx.annotation.MainThread

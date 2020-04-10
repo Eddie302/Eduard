@@ -1,12 +1,10 @@
-package com.example.amphsesviewer.feature.gallery.domain
+package com.example.amphsesviewer.feature.gallery.interactor
 
 import android.graphics.Bitmap
 import com.example.amphsesviewer.domain.model.ImageData
 import com.example.amphsesviewer.domain.repository.IGalleryRepository
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
-import java.io.File
 import javax.inject.Inject
 
 class GalleryInteractor @Inject constructor(

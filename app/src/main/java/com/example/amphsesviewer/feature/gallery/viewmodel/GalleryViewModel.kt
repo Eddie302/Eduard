@@ -1,15 +1,13 @@
 package com.example.amphsesviewer.feature.gallery.viewmodel
 
 import android.graphics.Bitmap
-import com.example.amphsesviewer.domain.model.ImageData
-import com.example.amphsesviewer.ui.core.ViewAction
-import com.example.amphsesviewer.ui.core.ViewEvent
-import com.example.amphsesviewer.ui.core.ViewModelBase
-import com.example.amphsesviewer.ui.core.ViewState
-import com.example.amphsesviewer.feature.gallery.domain.IGalleryInteractor
+import com.example.amphsesviewer.feature.ViewAction
+import com.example.amphsesviewer.feature.ViewEvent
+import com.example.amphsesviewer.feature.ViewModelBase
+import com.example.amphsesviewer.feature.ViewState
+import com.example.amphsesviewer.feature.gallery.interactor.IGalleryInteractor
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.lang.ref.WeakReference
 

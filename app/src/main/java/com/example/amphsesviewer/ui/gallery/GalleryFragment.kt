@@ -1,7 +1,5 @@
 package com.example.amphsesviewer.ui.gallery
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,17 +10,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.amphsesviewer.App
 import com.example.amphsesviewer.R
 import com.example.amphsesviewer.databinding.FragmentGalleryBinding
 import com.example.amphsesviewer.feature.di.FeatureComponentManager
-import com.example.amphsesviewer.feature.gallery.factory.GalleryViewModelFactory
+import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryViewModelFactory
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryAction
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryEvent
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryState
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryViewModel
 import com.example.amphsesviewer.ui.adapters.ImagesAdapter
-import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class GalleryFragment : Fragment() {
