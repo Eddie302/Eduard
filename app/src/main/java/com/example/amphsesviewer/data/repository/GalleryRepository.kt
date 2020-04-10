@@ -27,11 +27,9 @@ class GalleryRepository @Inject constructor(
 
     private val dir = context.filesDir
 
-    private val bitmapRelay: PublishRelay<Bitmap> = PublishRelay.create()
+    private val bitmapRelay: PublishRelay<ImageData> = PublishRelay.create()
 
-    override fun newImageProvider(): Flowable<Bitmap> {
-        return RxJavaBridge.toV3Flowable(bitmapRelay.toFlowable(BackpressureStrategy.LATEST))
-    }
+    override val newImageProvider: Flowable<ImageData> = RxJavaBridge.toV3Flowable(bitmapRelay.toFlowable(BackpressureStrategy.LATEST))
 
     override fun loadImagesData(): Single<List<ImageData>> {
         return RxJavaBridge.toV3Single(databaseStorage.imageDao().getAll())
@@ -53,11 +51,13 @@ class GalleryRepository @Inject constructor(
 
         return Completable.fromCallable {
             if (bitmap != null) {
-                val fileName = databaseStorage.imageDao().insert(ImageSM()).toString()
-//                bitmapRelay.accept(bitmap)
-                val file = File(dir, fileName)
+                val id = databaseStorage.imageDao().insert(ImageSM())
+                val file = File(dir, id.toString())
                 FileOutputStream(file).run {
                     val success = bitmap.compress(Bitmap.CompressFormat.JPEG, COMPRESS_QUALITY_MAX, this)
+                    if (success) {
+                        bitmapRelay.accept(ImageData(id, bitmap))
+                    }
                     flush()
                     close()
                 }
