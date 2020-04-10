@@ -14,11 +14,10 @@ import kotlin.collections.ArrayList
 class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImagesAdapter.ImageViewHolder>() {
 
     var images: List<ImageData> = ArrayList()
-    private var binding: ImageGridItemLayoutBinding? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-        binding = ImageGridItemLayoutBinding.inflate(LayoutInflater.from(parent.context))
-        return ImageViewHolder(binding!!.root)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.image_grid_item_layout, parent, false)
+        return ImageViewHolder(view)
     }
 
     override fun getItemCount(): Int = images.size
@@ -30,7 +29,6 @@ class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImagesA
     inner class ImageViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(position: Int) {
             view.findViewById<AppCompatImageView>(R.id.image).setImageBitmap(images[position].bitmap)
-//            binding?.image?.setImageBitmap(images[position].bitmap)
         }
     }
 }
