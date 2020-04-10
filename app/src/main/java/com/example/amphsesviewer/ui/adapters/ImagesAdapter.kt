@@ -2,16 +2,14 @@ package com.example.amphsesviewer.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.amphsesviewer.R
-import com.example.amphsesviewer.databinding.ImageGridItemLayoutBinding
 import com.example.amphsesviewer.domain.model.ImageData
+import com.example.amphsesviewer.ui.viewholders.ImageViewHolder
 import kotlin.collections.ArrayList
 
-class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImagesAdapter.ImageViewHolder>() {
+class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImageViewHolder>() {
 
     var images: List<ImageData> = ArrayList()
 
@@ -23,12 +21,6 @@ class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImagesA
     override fun getItemCount(): Int = images.size
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-        holder.bind(position)
-    }
-
-    inner class ImageViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(position: Int) {
-            view.findViewById<AppCompatImageView>(R.id.image).setImageBitmap(images[position].bitmap)
-        }
+        holder.bind(images[position])
     }
 }
