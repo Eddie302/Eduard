@@ -23,14 +23,4 @@ class FeatureModule {
     fun provideLoadImageFeature(repository: IGalleryRepository) : ILoadImageInteractor {
         return LoadImageInteractor(repository)
     }
-
-    @Provides
-    fun provideGalleryViewModelFactory(interactor: IGalleryInteractor) : GalleryViewModelFactory {
-        return GalleryViewModelFactory(interactor)
-    }
-
-    @Provides
-    fun provideLoadImageViewModelFactory(interactor: ILoadImageInteractor) : LoadImageViewModelFactory {
-        return LoadImageViewModelFactory(interactor)
-    }
 }
