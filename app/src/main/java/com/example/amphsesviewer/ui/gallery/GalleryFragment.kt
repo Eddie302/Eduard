@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.amphsesviewer.R
 import com.example.amphsesviewer.databinding.FragmentGalleryBinding
@@ -19,6 +20,7 @@ import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryEvent
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryState
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryViewModel
 import com.example.amphsesviewer.ui.adapters.ImagesAdapter
+import com.example.amphsesviewer.ui.diffutils.ImageDiffUtilCallback
 import javax.inject.Inject
 
 class GalleryFragment : Fragment() {
@@ -65,22 +67,17 @@ class GalleryFragment : Fragment() {
     }
 
     private fun renderState(state: GalleryState) {
-//        imagesAdapter.run{
-//            images.clear()
-//            notifyDataSetChanged()
-//            images.addAll(state.images)
-//            notifyDataSetChanged()
-//        }
+        imagesAdapter.run{
+            val result = with(ImageDiffUtilCallback(images, state.images)) {
+                DiffUtil.calculateDiff(this)
+            }
+            images = state.images
+            result.dispatchUpdatesTo(this)
+        }
     }
 
     private fun processAction(action: GalleryAction) = when (action) {
         is GalleryAction.OpenImageLoader -> findNavController().navigate(R.id.action_nav_gallery_to_loadImage)
-        is GalleryAction.ImageAdded -> {
-            imagesAdapter.run {
-                images.add(Pair(action.imageId, action.imageRef))
-                notifyItemInserted(images.size - 1)
-            }
-        }
         is GalleryAction.ShowError -> Toast.makeText(context, action.t.message, Toast.LENGTH_LONG).show()
     }
 }

@@ -1,6 +1,7 @@
 package com.example.amphsesviewer.feature.gallery.viewmodel
 
 import android.graphics.Bitmap
+import com.example.amphsesviewer.domain.model.ImageData
 import com.example.amphsesviewer.feature.ViewAction
 import com.example.amphsesviewer.feature.ViewEvent
 import com.example.amphsesviewer.feature.ViewModelBase
@@ -20,12 +21,11 @@ sealed class GalleryEvent :
 sealed class GalleryAction:
     ViewAction {
     object OpenImageLoader : GalleryAction()
-    data class ImageAdded(val imageId: String, val imageRef: WeakReference<Bitmap>): GalleryAction()
     data class ShowError(val t: Throwable): GalleryAction()
 }
 
 data class GalleryState(
-    val images: List<Pair<String, WeakReference<Bitmap>>> = ArrayList()
+    val images: List<ImageData> = ArrayList()
 ): ViewState
 
 class GalleryViewModel(
@@ -33,26 +33,19 @@ class GalleryViewModel(
     initState: GalleryState = GalleryState()
 ) : ViewModelBase<GalleryState, GalleryAction, GalleryEvent>(initState) {
 
-    private val imagesMap: MutableMap<String, Bitmap> = HashMap()
-
-    private fun addBitmap (bitmap: Bitmap?, id: String) {
-        bitmap?.let {
-            imagesMap[id] = it
-            sendAction(GalleryAction.ImageAdded(id, WeakReference(it)))
-
-//            sendNewState {
-//                copy(
-//                    images = imagesMap.map {
-//                        Pair(it.key, WeakReference(it.value))
-//                    }
-//                )
-//            }
-        }
-    }
+    private val imagesMap: MutableMap<String, Bitmap?> = HashMap()
 
     init {
         interactor.loadImagesData()
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSuccess {
+                sendNewState {
+                    copy(
+                        images = it
+                    )
+                }
+            }
             .flatMapObservable {
                 Observable.fromIterable(it)
             }
@@ -61,15 +54,23 @@ class GalleryViewModel(
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
-                        { bitmap ->
-                            addBitmap(bitmap, imageData.id)
-                        }, { t ->
-                            sendAction(GalleryAction.ShowError(t))
-                        }
+                        { addBitmap(it, imageData.id) },
+                        { sendAction(GalleryAction.ShowError(it)) }
                     )
             }, {
                 sendAction(GalleryAction.ShowError(it))
             })
+    }
+
+    private fun addBitmap (bitmap: Bitmap?, id: String) {
+        bitmap?.let {
+            imagesMap[id] = it
+            sendNewState {
+                copy(
+                    images = imagesMap.map { ImageData(it.key, it.value) }
+                )
+            }
+        }
     }
 
     private fun saveBitmap(bitmap: Bitmap, name: String) {

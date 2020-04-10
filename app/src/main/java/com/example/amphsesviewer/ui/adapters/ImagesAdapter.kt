@@ -8,11 +8,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.amphsesviewer.R
 import com.example.amphsesviewer.databinding.ImageGridItemLayoutBinding
+import com.example.amphsesviewer.domain.model.ImageData
 import java.lang.ref.WeakReference
 
 class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImagesAdapter.ImageViewHolder>() {
 
-    var images: MutableList<Pair<String, WeakReference<Bitmap>>> = ArrayList()
+    var images: List<ImageData> = ArrayList()
     private var binding: ImageGridItemLayoutBinding? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
@@ -29,7 +30,7 @@ class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImagesA
 
     inner class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(position: Int) {
-            binding?.image?.setImageBitmap(images[position].second.get())
+            binding?.image?.setImageBitmap(images[position].bitmap)
         }
     }
 }
