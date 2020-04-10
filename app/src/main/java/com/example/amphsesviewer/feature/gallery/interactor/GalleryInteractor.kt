@@ -12,11 +12,11 @@ class GalleryInteractor @Inject constructor(
     private val galleryRepository: IGalleryRepository
 ) : IGalleryInteractor {
 
+    override val newImageProvider : Flowable<ImageData> = galleryRepository.newImageProvider
+
     override fun loadImagesData() : Single<List<ImageData>> {
         return galleryRepository.loadImagesData()
     }
-
-    override val newImageProvider : Flowable<ImageData> = galleryRepository.newImageProvider
 
     override fun saveBitmap(bitmap: Bitmap): Completable {
         return galleryRepository.saveBitmap(bitmap)
@@ -24,5 +24,9 @@ class GalleryInteractor @Inject constructor(
 
     override fun loadBitmap(id: Long): Single<Bitmap?> {
         return galleryRepository.loadBitmap(id)
+    }
+
+    override fun deleteImage(id: Long): Completable {
+        return galleryRepository.deleteImage(id)
     }
 }

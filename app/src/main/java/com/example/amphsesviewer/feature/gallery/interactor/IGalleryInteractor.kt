@@ -8,8 +8,9 @@ import io.reactivex.rxjava3.core.Single
 
 
 interface IGalleryInteractor {
-    fun loadImagesData() : Single<List<ImageData>>
     val newImageProvider: Flowable<ImageData>
+    fun loadImagesData() : Single<List<ImageData>>
     fun saveBitmap(bitmap: Bitmap): Completable
     fun loadBitmap(id: Long): Single<Bitmap?>
+    fun deleteImage(id: Long): Completable
 }

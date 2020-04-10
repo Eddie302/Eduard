@@ -63,6 +63,16 @@ class GalleryRepository @Inject constructor(
             }
         }
     }
+
+    override fun deleteImage(id: Long): Completable {
+        return Completable.fromCallable {
+            val file = File(dir, id.toString())
+            val success = file.delete()
+            if (success) {
+                databaseStorage.imageDao().delete(ImageSM(id))
+            }
+        }
+    }
 }
 
 private const val COMPRESS_QUALITY_MAX = 100

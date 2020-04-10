@@ -12,4 +12,5 @@ interface IGalleryRepository {
     fun saveBitmap(bitmap: Bitmap?) : Completable
     fun loadImagesData(): Single<List<ImageData>>
     fun loadBitmap(id: Long) : Single<Bitmap?>
+    fun deleteImage(id: Long): Completable
 }

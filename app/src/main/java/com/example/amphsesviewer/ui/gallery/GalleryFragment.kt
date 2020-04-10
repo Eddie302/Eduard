@@ -25,6 +25,10 @@ import javax.inject.Inject
 
 class GalleryFragment : Fragment() {
 
+    private val itemLongClickCallback = { id: Long ->
+        viewModel(GalleryEvent.DeleteImage(id))
+    }
+
     private var binding: FragmentGalleryBinding? = null
 
     @Inject
@@ -45,6 +49,7 @@ class GalleryFragment : Fragment() {
     ): View? {
         val layoutManager = GridLayoutManager(context, 3)
         imagesAdapter = ImagesAdapter(context)
+        imagesAdapter.itemLongClickCallback = itemLongClickCallback
         viewModel.run {
             action.observe(viewLifecycleOwner, Observer {
                 processAction(it)

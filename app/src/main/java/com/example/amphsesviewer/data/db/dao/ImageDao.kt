@@ -1,9 +1,6 @@
 package com.example.amphsesviewer.data.db.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.amphsesviewer.data.db.model.ImageSM
 import io.reactivex.Single
 
@@ -16,4 +13,7 @@ interface ImageDao {
 
     @Query("SELECT * FROM image")
     fun getAll(): Single<List<ImageSM>>
+
+    @Delete
+    fun delete(image: ImageSM): Int
 }

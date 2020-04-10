@@ -14,9 +14,9 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
-sealed class GalleryEvent :
-    ViewEvent {
+sealed class GalleryEvent : ViewEvent {
     object LoadClicked : GalleryEvent()
+    data class DeleteImage(val id: Long): GalleryEvent()
 }
 
 sealed class GalleryAction:
@@ -83,9 +83,24 @@ class GalleryViewModel(
         }
     }
 
+    private fun deleteImage(id: Long) {
+        interactor.deleteImage(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                imagesMap.remove(id)
+                sendNewState {
+                    copy(
+                        images = imagesMap.toSortedMap().map { ImageData(it.key, it.value) }
+                    )
+                }
+            }, { sendAction(GalleryAction.ShowError(it)) })
+    }
+
     override fun invoke(event: GalleryEvent) {
         when (event) {
             is GalleryEvent.LoadClicked -> sendAction(GalleryAction.OpenImageLoader)
+            is GalleryEvent.DeleteImage -> deleteImage(event.id)
         }
     }
 }
