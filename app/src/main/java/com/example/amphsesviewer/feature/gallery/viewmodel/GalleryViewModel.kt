@@ -1,6 +1,7 @@
 package com.example.amphsesviewer.feature.gallery.viewmodel
 
 import android.graphics.Bitmap
+import com.example.amphsesviewer.domain.model.ImageData
 import com.example.amphsesviewer.feature.ViewAction
 import com.example.amphsesviewer.feature.ViewEvent
 import com.example.amphsesviewer.feature.ViewModelBase
@@ -9,7 +10,7 @@ import com.example.amphsesviewer.feature.gallery.interactor.IGalleryInteractor
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
@@ -25,7 +26,7 @@ sealed class GalleryAction:
 }
 
 data class GalleryState(
-    val images: SortedMap<Long, Bitmap?> = TreeMap()
+    val images: List<ImageData> = ArrayList()
 ): ViewState
 
 class GalleryViewModel(
@@ -43,7 +44,7 @@ class GalleryViewModel(
                 imagesMap = it.associateBy( { it.id }, {it.bitmap} ).toMutableMap()
                 sendNewState {
                     copy(
-                        images = imagesMap.toSortedMap()
+                        images = imagesMap.toSortedMap().map { ImageData(it.key, it.value) }
                     )
                 }
             }
@@ -76,7 +77,7 @@ class GalleryViewModel(
             imagesMap[id] = it
             sendNewState {
                 copy(
-                    images = imagesMap.toSortedMap()//.map { ImageData(it.key, it.value) }
+                    images = imagesMap.toSortedMap().map { ImageData(it.key, it.value) }
                 )
             }
         }
@@ -84,9 +85,7 @@ class GalleryViewModel(
 
     override fun invoke(event: GalleryEvent) {
         when (event) {
-            is GalleryEvent.LoadClicked -> sendAction(
-                GalleryAction.OpenImageLoader
-            )
+            is GalleryEvent.LoadClicked -> sendAction(GalleryAction.OpenImageLoader)
         }
     }
 }
