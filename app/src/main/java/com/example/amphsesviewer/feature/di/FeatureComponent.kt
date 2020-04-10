@@ -20,7 +20,7 @@ interface FeatureDependency {
 }
 
 @Singleton
-@Component(modules = [AppModule::class, FeatureModule::class], dependencies = [DataDependency::class])
+@Component(modules = [FeatureModule::class], dependencies = [DataDependency::class])
 interface FeatureComponent : FeatureDependency {
 
 
@@ -29,7 +29,6 @@ interface FeatureComponent : FeatureDependency {
             return DaggerFeatureComponent.builder()
                 .dataDependency(DataComponent.build(context))
                 .featureModule(FeatureModule())
-                .appModule(AppModule(context.applicationContext))
                 .build()
         }
     }
