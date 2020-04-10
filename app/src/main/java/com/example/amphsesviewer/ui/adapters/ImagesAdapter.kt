@@ -4,7 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.amphsesviewer.R
 import com.example.amphsesviewer.databinding.ImageGridItemLayoutBinding
 import com.example.amphsesviewer.domain.model.ImageData
 import kotlin.collections.ArrayList
@@ -14,16 +16,8 @@ class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImagesA
     var images: List<ImageData> = ArrayList()
     private var binding: ImageGridItemLayoutBinding? = null
 
-//    fun insertBitmap(imageData: ImageData) {
-//        if (images.containsKey(imageData.id)) {
-//            images[imageData.id] = imageData.bitmap
-//            notifyItemChanged(imageData.id.toInt())
-//        }
-//    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         binding = ImageGridItemLayoutBinding.inflate(LayoutInflater.from(parent.context))
-//        val view = LayoutInflater.from(parent.context).inflate(R.layout.image_grid_item_layout, parent)
         return ImageViewHolder(binding!!.root)
     }
 
@@ -33,9 +27,10 @@ class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImagesA
         holder.bind(position)
     }
 
-    inner class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ImageViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(position: Int) {
-            binding?.image?.setImageBitmap(images[position].bitmap)
+            view.findViewById<AppCompatImageView>(R.id.image).setImageBitmap(images[position].bitmap)
+//            binding?.image?.setImageBitmap(images[position].bitmap)
         }
     }
 }
