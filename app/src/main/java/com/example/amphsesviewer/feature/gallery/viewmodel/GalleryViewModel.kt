@@ -11,6 +11,9 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.lang.ref.WeakReference
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 sealed class GalleryEvent :
@@ -25,7 +28,7 @@ sealed class GalleryAction:
 }
 
 data class GalleryState(
-    val images: List<ImageData> = ArrayList()
+    val images: SortedMap<Long, Bitmap?> = TreeMap()
 ): ViewState
 
 class GalleryViewModel(
@@ -33,16 +36,17 @@ class GalleryViewModel(
     initState: GalleryState = GalleryState()
 ) : ViewModelBase<GalleryState, GalleryAction, GalleryEvent>(initState) {
 
-    private val imagesMap: MutableMap<String, Bitmap?> = HashMap()
+    private var imagesMap: MutableMap<Long, Bitmap?> = HashMap()
 
     init {
         interactor.loadImagesData()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess {
+                imagesMap = it.associateBy( { it.id }, {it.bitmap} ).toMutableMap()
                 sendNewState {
                     copy(
-                        images = it
+                        images = imagesMap.toSortedMap()
                     )
                 }
             }
@@ -62,12 +66,12 @@ class GalleryViewModel(
             })
     }
 
-    private fun addBitmap (bitmap: Bitmap?, id: String) {
+    private fun addBitmap (bitmap: Bitmap?, id: Long) {
         bitmap?.let {
             imagesMap[id] = it
             sendNewState {
                 copy(
-                    images = imagesMap.map { ImageData(it.key, it.value) }
+                    images = imagesMap.toSortedMap()//.map { ImageData(it.key, it.value) }
                 )
             }
         }

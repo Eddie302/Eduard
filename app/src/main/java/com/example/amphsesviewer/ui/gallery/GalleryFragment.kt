@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.amphsesviewer.R
 import com.example.amphsesviewer.databinding.FragmentGalleryBinding
+import com.example.amphsesviewer.domain.model.ImageData
 import com.example.amphsesviewer.feature.di.FeatureComponentManager
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryViewModelFactory
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryAction
@@ -68,10 +69,11 @@ class GalleryFragment : Fragment() {
 
     private fun renderState(state: GalleryState) {
         imagesAdapter.run{
-            val result = with(ImageDiffUtilCallback(images, state.images)) {
+            val imagesList = state.images.map { ImageData(it.key, it.value) }
+            val result = with(ImageDiffUtilCallback(images, imagesList)) {
                 DiffUtil.calculateDiff(this)
             }
-            images = state.images
+            images = imagesList
             result.dispatchUpdatesTo(this)
         }
     }

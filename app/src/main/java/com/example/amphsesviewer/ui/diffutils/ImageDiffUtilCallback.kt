@@ -15,7 +15,8 @@ class ImageDiffUtilCallback(
 
     override fun getNewListSize(): Int = newList.size
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        oldList[oldItemPosition].bitmap === newList[newItemPosition].bitmap
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].bitmap === newList[newItemPosition].bitmap
+    }
 
 }

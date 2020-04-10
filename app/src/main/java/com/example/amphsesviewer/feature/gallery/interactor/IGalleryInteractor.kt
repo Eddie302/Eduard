@@ -10,5 +10,5 @@ interface IGalleryInteractor {
     fun loadImagesData() : Single<List<ImageData>>
 //    fun getImageReceiver() : Flowable<Bitmap>
     fun saveBitmap(bitmap: Bitmap): Completable
-    fun loadBitmap(id: String): Single<Bitmap?>
+    fun loadBitmap(id: Long): Single<Bitmap?>
 }

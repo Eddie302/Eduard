@@ -10,11 +10,20 @@ import com.example.amphsesviewer.R
 import com.example.amphsesviewer.databinding.ImageGridItemLayoutBinding
 import com.example.amphsesviewer.domain.model.ImageData
 import java.lang.ref.WeakReference
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImagesAdapter.ImageViewHolder>() {
 
     var images: List<ImageData> = ArrayList()
     private var binding: ImageGridItemLayoutBinding? = null
+
+//    fun insertBitmap(imageData: ImageData) {
+//        if (images.containsKey(imageData.id)) {
+//            images[imageData.id] = imageData.bitmap
+//            notifyItemChanged(imageData.id.toInt())
+//        }
+//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         binding = ImageGridItemLayoutBinding.inflate(LayoutInflater.from(parent.context))

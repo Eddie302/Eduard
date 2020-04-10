@@ -11,5 +11,5 @@ interface IGalleryRepository {
     fun newImageProvider(): Flowable<Bitmap>
     fun saveBitmap(bitmap: Bitmap?) : Completable
     fun loadImagesData(): Single<List<ImageData>>
-    fun loadBitmap(id: String) : Single<Bitmap?>
+    fun loadBitmap(id: Long) : Single<Bitmap?>
 }

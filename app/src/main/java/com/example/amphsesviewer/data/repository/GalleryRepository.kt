@@ -38,14 +38,14 @@ class GalleryRepository @Inject constructor(
         return RxJavaBridge.toV3Single(databaseStorage.imageDao().getAll())
             .flatMapObservable { imagesSM ->
                 Observable.fromIterable(imagesSM).map { imageSM ->
-                    ImageData(imageSM.id.toString())
+                    ImageData(imageSM.id)
                 }
             }.toList()/*.onErrorReturnItem(emptyList())*/
     }
 
-    override fun loadBitmap(id: String) : Single<Bitmap?> {
+    override fun loadBitmap(id: Long) : Single<Bitmap?> {
         return Single.fromCallable {
-            val file = File(dir, id)
+            val file = File(dir, id.toString())
             BitmapFactory.decodeFile(file.absolutePath)
         }
     }
