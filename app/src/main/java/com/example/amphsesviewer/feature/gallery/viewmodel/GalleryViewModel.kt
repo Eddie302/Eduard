@@ -25,7 +25,13 @@ sealed class GalleryAction:
     data class ShowError(val t: Throwable): GalleryAction()
 }
 
+enum class GalleryMode {
+    View,
+    Edit
+}
+
 data class GalleryState(
+    val mode: GalleryMode = GalleryMode.View,
     val images: List<ImageData> = ArrayList()
 ): ViewState
 
@@ -40,36 +46,57 @@ class GalleryViewModel(
         interactor.loadImagesData()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess {
-                imagesMap = it.associateBy( { it.id }, {it.bitmap} ).toMutableMap()
+            .doOnNext {
+                val newMap: MutableMap<Long, Bitmap?> = it.associateBy( { it.id }, {it.bitmap} ).toMutableMap()
+
+                //method 1
+                newMap.forEach { (id, _) ->
+                    if (imagesMap[id] != null) {
+                        newMap[id] = imagesMap[id]
+                    }
+                }
+
+//                //method 2
+//                imagesMap.mapValues {
+//                    if (it.value != null) {
+//                        if (newMap.containsKey(it.key)) {
+//                            newMap[it.key] = it.value
+//                        }
+//                    }
+//                }
+
+                imagesMap = newMap
+
                 sendNewState {
                     copy(
                         images = imagesMap.toSortedMap().map { ImageData(it.key, it.value) }
                     )
                 }
             }
-            .flatMapObservable {
+            .flatMap {
                 Observable.fromIterable(it)
             }
             .subscribe({ imageData ->
-                interactor.loadBitmap(imageData.id)
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                        { addBitmap(imageData.id, it) },
-                        { sendAction(GalleryAction.ShowError(it)) }
-                    )
+                if (imagesMap[imageData.id] == null) {
+                    interactor.loadBitmap(imageData.id)
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                            { addBitmap(imageData.id, it) },
+                            { sendAction(GalleryAction.ShowError(it)) }
+                        )
+                }
             }, {
                 sendAction(GalleryAction.ShowError(it))
             })
 
-        interactor.newImageProvider
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { addBitmap(it.id, it.bitmap) },
-                { sendAction(GalleryAction.ShowError(it)) }
-            )
+//        interactor.newImageProvider
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe(
+//                { addBitmap(it.id, it.bitmap) },
+//                { sendAction(GalleryAction.ShowError(it)) }
+//            )
     }
 
     private fun addBitmap (id: Long, bitmap: Bitmap?) {
@@ -88,12 +115,7 @@ class GalleryViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                imagesMap.remove(id)
-                sendNewState {
-                    copy(
-                        images = imagesMap.toSortedMap().map { ImageData(it.key, it.value) }
-                    )
-                }
+
             }, { sendAction(GalleryAction.ShowError(it)) })
     }
 

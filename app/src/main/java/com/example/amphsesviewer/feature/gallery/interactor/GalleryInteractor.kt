@@ -5,6 +5,7 @@ import com.example.amphsesviewer.domain.model.ImageData
 import com.example.amphsesviewer.domain.repository.IGalleryRepository
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -14,7 +15,7 @@ class GalleryInteractor @Inject constructor(
 
     override val newImageProvider : Flowable<ImageData> = galleryRepository.newImageProvider
 
-    override fun loadImagesData() : Single<List<ImageData>> {
+    override fun loadImagesData() : Observable<List<ImageData>> {
         return galleryRepository.loadImagesData()
     }
 
