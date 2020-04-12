@@ -48,14 +48,12 @@ class GalleryViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
                 val newMap: MutableMap<Long, Bitmap?> = it.associateBy( { it.id }, {it.bitmap} ).toMutableMap()
-
                 //method 1
                 newMap.forEach { (id, _) ->
                     if (imagesMap[id] != null) {
                         newMap[id] = imagesMap[id]
                     }
                 }
-
 //                //method 2
 //                imagesMap.mapValues {
 //                    if (it.value != null) {
@@ -64,9 +62,7 @@ class GalleryViewModel(
 //                        }
 //                    }
 //                }
-
                 imagesMap = newMap
-
                 sendNewState {
                     copy(
                         images = imagesMap.toSortedMap().map { ImageData(it.key, it.value) }
@@ -89,14 +85,6 @@ class GalleryViewModel(
             }, {
                 sendAction(GalleryAction.ShowError(it))
             })
-
-//        interactor.newImageProvider
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(
-//                { addBitmap(it.id, it.bitmap) },
-//                { sendAction(GalleryAction.ShowError(it)) }
-//            )
     }
 
     private fun addBitmap (id: Long, bitmap: Bitmap?) {

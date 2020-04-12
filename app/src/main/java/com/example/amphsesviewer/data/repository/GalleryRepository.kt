@@ -29,15 +29,12 @@ class GalleryRepository @Inject constructor(
 
     override val newImageProvider: Flowable<ImageData> = RxJavaBridge.toV3Flowable(bitmapRelay.toFlowable(BackpressureStrategy.LATEST))
 
-    private lateinit var imagesObservable: Observable<List<ImageData>>
-
     override fun loadImagesData(): Observable<List<ImageData>> {
         return RxJavaBridge.toV3Observable(databaseStorage.imageDao().getAll())
             .flatMap {
                 Observable.fromIterable(it).map {
                     ImageData(it.id)
                 }.toList().toObservable()
-
 //                Flowable.fromIterable(imagesSM).map { imageSM ->
 //                    ImageData(imageSM.id)
 //                }
