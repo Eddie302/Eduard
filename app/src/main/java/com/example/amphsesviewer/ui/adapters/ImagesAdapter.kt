@@ -11,7 +11,7 @@ import kotlin.collections.ArrayList
 
 class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImageViewHolder>() {
 
-    lateinit var itemLongClickCallback: (id: Long) -> Unit
+    lateinit var itemLongClickCallback: (imageData: ImageData) -> Unit
 
     var images: List<ImageData> = ArrayList()
 
@@ -23,7 +23,7 @@ class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImageVi
     override fun onViewAttachedToWindow(holder: ImageViewHolder) {
         val position = holder.adapterPosition
         holder.itemView.setOnLongClickListener {
-            itemLongClickCallback(images[position].id)
+            itemLongClickCallback(images[position])
             false
         }
     }

@@ -16,7 +16,7 @@ import kotlin.collections.HashMap
 
 sealed class GalleryEvent : ViewEvent {
     object LoadClicked : GalleryEvent()
-    data class DeleteImage(val id: Long): GalleryEvent()
+    data class DeleteImage(val imageData: ImageData): GalleryEvent()
 }
 
 sealed class GalleryAction:
@@ -40,20 +40,22 @@ class GalleryViewModel(
     initState: GalleryState = GalleryState()
 ) : ViewModelBase<GalleryState, GalleryAction, GalleryEvent>(initState) {
 
-    private var imagesMap: MutableMap<Long, Bitmap?> = HashMap()
+    private var imagesMap: MutableMap<Long, Pair<String, Bitmap?>> = HashMap()
 
     init {
         interactor.loadImagesData()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
-                val newMap: MutableMap<Long, Bitmap?> = it.associateBy( { it.id }, {it.bitmap} ).toMutableMap()
+                val newMap: MutableMap<Long, Pair<String, Bitmap?>> = it.associateBy({ it.id }, { Pair(it.fileName, it.bitmap) }).toMutableMap()
+
                 //method 1
                 newMap.forEach { (id, _) ->
-                    if (imagesMap[id] != null) {
-                        newMap[id] = imagesMap[id]
+                    if (imagesMap[id]?.second != null) {
+                        newMap[id] = Pair(imagesMap[id]!!.first, imagesMap[id]!!.second)
                     }
                 }
+
 //                //method 2
 //                imagesMap.mapValues {
 //                    if (it.value != null) {
@@ -62,10 +64,14 @@ class GalleryViewModel(
 //                        }
 //                    }
 //                }
+
                 imagesMap = newMap
+
                 sendNewState {
                     copy(
-                        images = imagesMap.toSortedMap().map { ImageData(it.key, it.value) }
+                        images = imagesMap.toSortedMap().map {
+                            ImageData(it.key, it.value.first, it.value.second)
+                        }
                     )
                 }
             }
@@ -73,12 +79,12 @@ class GalleryViewModel(
                 Observable.fromIterable(it)
             }
             .subscribe({ imageData ->
-                if (imagesMap[imageData.id] == null) {
-                    interactor.loadBitmap(imageData.id)
+                if (imagesMap[imageData.id]?.second == null) {
+                    interactor.loadBitmap(imageData.fileName)
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                            { addBitmap(imageData.id, it) },
+                            { addBitmap(imageData.id, imageData.fileName, it) },
                             { sendAction(GalleryAction.ShowError(it)) }
                         )
                 }
@@ -87,19 +93,19 @@ class GalleryViewModel(
             })
     }
 
-    private fun addBitmap (id: Long, bitmap: Bitmap?) {
+    private fun addBitmap (id: Long, filename: String, bitmap: Bitmap?) {
         bitmap?.let {
-            imagesMap[id] = it
+            imagesMap[id] = Pair(filename, it)
             sendNewState {
                 copy(
-                    images = imagesMap.toSortedMap().map { ImageData(it.key, it.value) }
+                    images = imagesMap.toSortedMap().map { ImageData(it.key, it.value.first, it.value.second) }
                 )
             }
         }
     }
 
-    private fun deleteImage(id: Long) {
-        interactor.deleteImage(id)
+    private fun deleteImage(imageData: ImageData) {
+        interactor.deleteImage(imageData)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -110,7 +116,7 @@ class GalleryViewModel(
     override fun invoke(event: GalleryEvent) {
         when (event) {
             is GalleryEvent.LoadClicked -> sendAction(GalleryAction.OpenImageLoader)
-            is GalleryEvent.DeleteImage -> deleteImage(event.id)
+            is GalleryEvent.DeleteImage -> deleteImage(event.imageData)
         }
     }
 }

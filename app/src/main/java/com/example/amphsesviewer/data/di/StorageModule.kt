@@ -15,6 +15,7 @@ class StorageModule {
     fun provideDatabase(context: Context): DatabaseStorage {
         return Room
             .databaseBuilder(context, DatabaseStorage::class.java, "database")
+            .fallbackToDestructiveMigration()
             .build()
     }
 

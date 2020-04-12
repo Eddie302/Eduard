@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.amphsesviewer.R
 import com.example.amphsesviewer.databinding.FragmentGalleryBinding
+import com.example.amphsesviewer.domain.model.ImageData
 import com.example.amphsesviewer.feature.di.FeatureComponentManager
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryViewModelFactory
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryAction
@@ -25,8 +26,8 @@ import javax.inject.Inject
 
 class GalleryFragment : Fragment() {
 
-    private val itemLongClickCallback = { id: Long ->
-        viewModel(GalleryEvent.DeleteImage(id))
+    private val itemLongClickCallback = { imageData: ImageData ->
+        viewModel(GalleryEvent.DeleteImage(imageData))
     }
 
     private var binding: FragmentGalleryBinding? = null

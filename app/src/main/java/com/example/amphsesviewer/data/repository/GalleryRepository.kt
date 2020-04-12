@@ -14,9 +14,9 @@ import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.kotlin.Observables
 import java.io.File
 import java.io.FileOutputStream
+import java.util.*
 import javax.inject.Inject
 
 
@@ -33,7 +33,7 @@ class GalleryRepository @Inject constructor(
         return RxJavaBridge.toV3Observable(databaseStorage.imageDao().getAll())
             .flatMap {
                 Observable.fromIterable(it).map {
-                    ImageData(it.id)
+                    ImageData(it.id, it.fileName)
                 }.toList().toObservable()
 //                Flowable.fromIterable(imagesSM).map { imageSM ->
 //                    ImageData(imageSM.id)
@@ -41,9 +41,9 @@ class GalleryRepository @Inject constructor(
             }/*.onErrorReturnItem(emptyList())*/
     }
 
-    override fun loadBitmap(id: Long) : Single<Bitmap?> {
+    override fun loadBitmap(filename: String) : Single<Bitmap?> {
         return Single.fromCallable {
-            val file = File(dir, id.toString())
+            val file = File(dir, filename)
             BitmapFactory.decodeFile(file.absolutePath)
         }
     }
@@ -51,23 +51,24 @@ class GalleryRepository @Inject constructor(
     override fun saveBitmap(bitmap: Bitmap?) : Completable {
         return Completable.fromCallable {
             if (bitmap != null) {
-                val id = databaseStorage.imageDao().insert(ImageSM())
-                val file = File(dir, id.toString())
+                val filename = UUID.randomUUID().toString()
+                val file = File(dir, filename)
                 FileOutputStream(file).run {
                     bitmap.compress(Bitmap.CompressFormat.JPEG, COMPRESS_QUALITY_MAX, this)
                     flush()
                     close()
                 }
+                databaseStorage.imageDao().insert(ImageSM(fileName = filename))
             }
         }
     }
 
-    override fun deleteImage(id: Long): Completable {
+    override fun deleteImage(imageData: ImageData): Completable {
         return Completable.fromCallable {
-            val file = File(dir, id.toString())
+            val file = File(dir, imageData.fileName)
             val success = file.delete()
             if (success) {
-                databaseStorage.imageDao().delete(ImageSM(id))
+                databaseStorage.imageDao().delete(imageData.id)
             }
         }
     }

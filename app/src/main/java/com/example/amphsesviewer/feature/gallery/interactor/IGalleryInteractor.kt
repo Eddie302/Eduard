@@ -12,6 +12,6 @@ interface IGalleryInteractor {
     val newImageProvider: Flowable<ImageData>
     fun loadImagesData() : Observable<List<ImageData>>
     fun saveBitmap(bitmap: Bitmap): Completable
-    fun loadBitmap(id: Long): Single<Bitmap?>
-    fun deleteImage(id: Long): Completable
+    fun loadBitmap(filename: String): Single<Bitmap?>
+    fun deleteImage(imageData: ImageData): Completable
 }

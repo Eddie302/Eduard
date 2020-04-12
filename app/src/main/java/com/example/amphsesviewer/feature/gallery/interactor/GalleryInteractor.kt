@@ -23,11 +23,11 @@ class GalleryInteractor @Inject constructor(
         return galleryRepository.saveBitmap(bitmap)
     }
 
-    override fun loadBitmap(id: Long): Single<Bitmap?> {
-        return galleryRepository.loadBitmap(id)
+    override fun loadBitmap(filename: String): Single<Bitmap?> {
+        return galleryRepository.loadBitmap(filename)
     }
 
-    override fun deleteImage(id: Long): Completable {
-        return galleryRepository.deleteImage(id)
+    override fun deleteImage(imageData: ImageData): Completable {
+        return galleryRepository.deleteImage(imageData)
     }
 }
