@@ -35,10 +35,7 @@ class GalleryRepository @Inject constructor(
                 Observable.fromIterable(it).map {
                     ImageData(it.id, it.fileName)
                 }.toList().toObservable()
-//                Flowable.fromIterable(imagesSM).map { imageSM ->
-//                    ImageData(imageSM.id)
-//                }
-            }/*.onErrorReturnItem(emptyList())*/
+            }
     }
 
     override fun loadBitmap(filename: String) : Single<Bitmap?> {
