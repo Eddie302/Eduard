@@ -47,23 +47,14 @@ class GalleryViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
-                val newMap: MutableMap<Long, Pair<String, Bitmap?>> = it.associateBy({ it.id }, { Pair(it.fileName, it.bitmap) }).toMutableMap()
+                val newMap: MutableMap<Long, Pair<String, Bitmap?>> =
+                    it.associateBy({ it.id }, { Pair(it.fileName, it.bitmap) }).toMutableMap()
 
-                //method 1
                 newMap.forEach { (id, _) ->
                     if (imagesMap[id]?.second != null) {
                         newMap[id] = Pair(imagesMap[id]!!.first, imagesMap[id]!!.second)
                     }
                 }
-
-//                //method 2
-//                imagesMap.mapValues {
-//                    if (it.value != null) {
-//                        if (newMap.containsKey(it.key)) {
-//                            newMap[it.key] = it.value
-//                        }
-//                    }
-//                }
 
                 imagesMap = newMap
 
