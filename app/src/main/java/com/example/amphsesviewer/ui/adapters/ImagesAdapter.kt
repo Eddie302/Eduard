@@ -21,8 +21,8 @@ class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImageVi
     }
 
     override fun onViewAttachedToWindow(holder: ImageViewHolder) {
-        val position = holder.adapterPosition
         holder.itemView.setOnLongClickListener {
+            val position = holder.adapterPosition
             itemLongClickCallback(images[position])
             false
         }

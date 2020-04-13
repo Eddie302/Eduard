@@ -96,9 +96,7 @@ class GalleryViewModel(
         interactor.deleteImage(imageData)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-
-            }, { sendAction(GalleryAction.ShowError(it)) })
+            .subscribe({}, { sendAction(GalleryAction.ShowError(it)) })
     }
 
     override fun invoke(event: GalleryEvent) {
