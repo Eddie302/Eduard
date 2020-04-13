@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.amphsesviewer.R
-import com.example.amphsesviewer.domain.model.ImageData
 import com.example.amphsesviewer.domain.model.ImageUI
 import com.example.amphsesviewer.ui.viewholders.ImageViewHolder
 import kotlin.collections.ArrayList

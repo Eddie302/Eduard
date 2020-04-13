@@ -32,8 +32,8 @@ enum class GalleryMode {
 
 data class GalleryState(
     val mode: GalleryMode = GalleryMode.View,
-    val imagesDataMap: MutableMap<Long, ImageData> = HashMap(),
-    val imagesMap: MutableMap<Long, Bitmap?> = HashMap()
+    val imagesDataMap: Map<Long, ImageData> = HashMap(),
+    val imagesMap: Map<Long, Bitmap?> = HashMap()
 ): ViewState
 
 class GalleryViewModel(
@@ -82,10 +82,11 @@ class GalleryViewModel(
 
     private fun addBitmap (id: Long, bitmap: Bitmap?) {
         bitmap?.let {
-            viewState.value!!.imagesMap[id] = bitmap
+            val map = viewState.value!!.imagesMap.toMutableMap()
+            map[id] = bitmap
             sendNewState {
                 copy(
-                    imagesMap = imagesMap
+                    imagesMap = map
                 )
             }
         }
