@@ -65,6 +65,21 @@ class GalleryFragment : Fragment() {
             this.btnLoad.setOnClickListener { viewModel(GalleryEvent.LoadClicked) }
             this.rvImages.layoutManager = layoutManager
             this.rvImages.adapter = imagesAdapter
+
+//            val globalLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
+//                override fun onGlobalLayout() {
+//                    (rvImages.layoutManager as GridLayoutManager).let {
+//                        if (it.childCount > 0) {
+//                            it.getChildAt(0)?.apply {
+//
+//                            }
+//                            rvImages.viewTreeObserver.removeOnGlobalLayoutListener(this)
+//                        }
+//                    }
+//                }
+//            }
+//
+//            this.rvImages.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
         }?.root
     }
 
