@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.amphsesviewer.R
 import com.example.amphsesviewer.databinding.FragmentGalleryBinding
-import com.example.amphsesviewer.domain.model.ImageData
+import com.example.amphsesviewer.domain.model.ImageUI
 import com.example.amphsesviewer.feature.di.FeatureComponentManager
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryViewModelFactory
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryAction
@@ -22,11 +22,12 @@ import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryState
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryViewModel
 import com.example.amphsesviewer.ui.adapters.ImagesAdapter
 import com.example.amphsesviewer.ui.diffutils.ImageDiffUtilCallback
+import java.lang.ref.SoftReference
 import javax.inject.Inject
 
 class GalleryFragment : Fragment() {
 
-    private val itemLongClickCallback = { imageData: ImageData ->
+    private val itemLongClickCallback = { imageData: ImageUI ->
         viewModel(GalleryEvent.DeleteImage(imageData))
     }
 
@@ -74,10 +75,13 @@ class GalleryFragment : Fragment() {
 
     private fun renderState(state: GalleryState) {
         imagesAdapter.run{
-            val result = with(ImageDiffUtilCallback(images, state.images)) {
+            val imageList: List<ImageUI> = state.imagesMap.toSortedMap().map {
+                ImageUI(it.key, SoftReference(it.value))
+            }
+            val result = with(ImageDiffUtilCallback(images, imageList)) {
                 DiffUtil.calculateDiff(this)
             }
-            images = state.images
+            images = imageList
             result.dispatchUpdatesTo(this)
         }
     }

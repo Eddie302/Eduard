@@ -5,16 +5,16 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.RecyclerView
 import com.example.amphsesviewer.R
-import com.example.amphsesviewer.domain.model.ImageData
+import com.example.amphsesviewer.domain.model.ImageUI
 
 class ImageViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-    fun bind(imageData: ImageData) {
+    fun bind(imageUI: ImageUI) {
         val pb = view.findViewById<ContentLoadingProgressBar>(R.id.pb)
-        if (imageData.bitmap != null) {
+        if (imageUI.image.get() != null) {
             pb.hide()
         } else {
             pb.show()
         }
-        view.findViewById<AppCompatImageView>(R.id.image).setImageBitmap(imageData.bitmap)
+        view.findViewById<AppCompatImageView>(R.id.image).setImageBitmap(imageUI.image.get())
     }
 }

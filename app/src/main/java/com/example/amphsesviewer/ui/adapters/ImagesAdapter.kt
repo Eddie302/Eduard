@@ -6,14 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.amphsesviewer.R
 import com.example.amphsesviewer.domain.model.ImageData
+import com.example.amphsesviewer.domain.model.ImageUI
 import com.example.amphsesviewer.ui.viewholders.ImageViewHolder
 import kotlin.collections.ArrayList
 
 class ImagesAdapter(private val context: Context?): RecyclerView.Adapter<ImageViewHolder>() {
 
-    lateinit var itemLongClickCallback: (imageData: ImageData) -> Unit
+    lateinit var itemLongClickCallback: (imageData: ImageUI) -> Unit
 
-    var images: List<ImageData> = ArrayList()
+    var images: List<ImageUI> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.image_grid_item_layout, parent, false)

@@ -1,11 +1,11 @@
 package com.example.amphsesviewer.ui.diffutils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.amphsesviewer.domain.model.ImageData
+import com.example.amphsesviewer.domain.model.ImageUI
 
 class ImageDiffUtilCallback(
-    private val oldList: List<ImageData>,
-    private val newList: List<ImageData>
+    private val oldList: List<ImageUI>,
+    private val newList: List<ImageUI>
 ) : DiffUtil.Callback() {
     override fun getOldListSize(): Int = oldList.size
 
@@ -15,5 +15,5 @@ class ImageDiffUtilCallback(
         oldList[oldItemPosition].id == newList[newItemPosition].id
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        oldList[oldItemPosition].bitmap === newList[newItemPosition].bitmap
+        oldList[oldItemPosition].image.get() === newList[newItemPosition].image.get()
 }

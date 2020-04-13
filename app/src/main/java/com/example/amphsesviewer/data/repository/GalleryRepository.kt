@@ -73,12 +73,14 @@ class GalleryRepository @Inject constructor(
         }
     }
 
-    override fun deleteImage(imageData: ImageData): Completable {
+    override fun deleteImage(imageData: ImageData?): Completable {
         return Completable.fromCallable {
-            val file = File(dir, imageData.fileName)
-            val success = file.delete()
-            if (success) {
-                databaseStorage.imageDao().delete(imageData.id)
+            if (imageData != null) {
+                val file = File(dir, imageData.fileName)
+                val success = file.delete()
+                if (success) {
+                    databaseStorage.imageDao().delete(imageData.id)
+                }
             }
         }
     }

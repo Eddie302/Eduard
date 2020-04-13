@@ -2,6 +2,7 @@ package com.example.amphsesviewer.feature.gallery.viewmodel
 
 import android.graphics.Bitmap
 import com.example.amphsesviewer.domain.model.ImageData
+import com.example.amphsesviewer.domain.model.ImageUI
 import com.example.amphsesviewer.feature.ViewAction
 import com.example.amphsesviewer.feature.ViewEvent
 import com.example.amphsesviewer.feature.ViewModelBase
@@ -10,13 +11,12 @@ import com.example.amphsesviewer.feature.gallery.interactor.IGalleryInteractor
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
 sealed class GalleryEvent : ViewEvent {
     object LoadClicked : GalleryEvent()
-    data class DeleteImage(val imageData: ImageData): GalleryEvent()
+    data class DeleteImage(val imageUI: ImageUI): GalleryEvent()
 }
 
 sealed class GalleryAction:
@@ -32,7 +32,8 @@ enum class GalleryMode {
 
 data class GalleryState(
     val mode: GalleryMode = GalleryMode.View,
-    val images: List<ImageData> = ArrayList()
+    val imagesDataMap: MutableMap<Long, ImageData> = HashMap(),
+    val imagesMap: MutableMap<Long, Bitmap?> = HashMap()
 ): ViewState
 
 class GalleryViewModel(
@@ -40,29 +41,23 @@ class GalleryViewModel(
     initState: GalleryState = GalleryState()
 ) : ViewModelBase<GalleryState, GalleryAction, GalleryEvent>(initState) {
 
-    private var imagesMap: MutableMap<Long, Pair<String, Bitmap?>> = HashMap()
-
     init {
-        interactor.loadImagesData()
+        val disposable = interactor.loadImagesData()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
-                val newMap: MutableMap<Long, Pair<String, Bitmap?>> =
-                    it.associateBy({ it.id }, { Pair(it.fileName, it.bitmap) }).toMutableMap()
+                val newMap: MutableMap<Long, Bitmap?> = it.associateBy({ it.id }, { null }).toMutableMap()
 
                 newMap.forEach { (id, _) ->
-                    if (imagesMap[id]?.second != null) {
-                        newMap[id] = Pair(imagesMap[id]!!.first, imagesMap[id]!!.second)
+                    if (viewState.value!!.imagesMap[id] != null) {
+                        newMap[id] = viewState.value!!.imagesMap[id]
                     }
                 }
 
-                imagesMap = newMap
-
                 sendNewState {
                     copy(
-                        images = imagesMap.toSortedMap().map {
-                            ImageData(it.key, it.value.first, it.value.second)
-                        }
+                        imagesDataMap = it.associateBy({it.id}, {it}).toMutableMap(),
+                        imagesMap = newMap
                     )
                 }
             }
@@ -70,32 +65,33 @@ class GalleryViewModel(
                 Observable.fromIterable(it)
             }
             .subscribe({ imageData ->
-                if (imagesMap[imageData.id]?.second == null) {
+                if (viewState.value!!.imagesMap[imageData.id] == null) {
                     interactor.loadBitmapThumbnail(imageData.fileName)
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                            { addBitmap(imageData.id, imageData.fileName, it) },
+                            { addBitmap(imageData.id, it) },
                             { sendAction(GalleryAction.ShowError(it)) }
                         )
                 }
             }, {
                 sendAction(GalleryAction.ShowError(it))
             })
+        compositeDisposable.add(disposable)
     }
 
-    private fun addBitmap (id: Long, filename: String, bitmap: Bitmap?) {
+    private fun addBitmap (id: Long, bitmap: Bitmap?) {
         bitmap?.let {
-            imagesMap[id] = Pair(filename, it)
+            viewState.value!!.imagesMap[id] = bitmap
             sendNewState {
                 copy(
-                    images = imagesMap.toSortedMap().map { ImageData(it.key, it.value.first, it.value.second) }
+                    imagesMap = imagesMap
                 )
             }
         }
     }
 
-    private fun deleteImage(imageData: ImageData) {
+    private fun deleteImage(imageData: ImageData?) {
         interactor.deleteImage(imageData)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -107,7 +103,7 @@ class GalleryViewModel(
     override fun invoke(event: GalleryEvent) {
         when (event) {
             is GalleryEvent.LoadClicked -> sendAction(GalleryAction.OpenImageLoader)
-            is GalleryEvent.DeleteImage -> deleteImage(event.imageData)
+            is GalleryEvent.DeleteImage -> deleteImage(viewState.value!!.imagesDataMap[event.imageUI.id])
         }
     }
 }

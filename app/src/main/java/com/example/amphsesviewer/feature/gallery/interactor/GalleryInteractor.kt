@@ -31,7 +31,7 @@ class GalleryInteractor @Inject constructor(
         return galleryRepository.loadBitmap(filename)
     }
 
-    override fun deleteImage(imageData: ImageData): Completable {
+    override fun deleteImage(imageData: ImageData?): Completable {
         return galleryRepository.deleteImage(imageData)
     }
 }

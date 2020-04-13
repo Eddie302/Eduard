@@ -14,5 +14,5 @@ interface IGalleryRepository {
     fun loadImagesData(): Observable<List<ImageData>>
     fun loadBitmapThumbnail(filename: String) : Single<Bitmap?>
     fun loadBitmap(filename: String) : Single<Bitmap?>
-    fun deleteImage(imageData: ImageData): Completable
+    fun deleteImage(imageData: ImageData?): Completable
 }

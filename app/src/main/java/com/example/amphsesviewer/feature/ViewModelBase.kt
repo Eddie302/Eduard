@@ -72,4 +72,8 @@ abstract class ViewModelBase<State: ViewState, Action : ViewAction, Event : View
     }
 
     abstract operator fun invoke(event: Event)
+
+    override fun onCleared() {
+        compositeDisposable.clear()
+    }
 }
