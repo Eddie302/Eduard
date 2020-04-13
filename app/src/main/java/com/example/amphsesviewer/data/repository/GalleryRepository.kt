@@ -25,6 +25,7 @@ class GalleryRepository @Inject constructor(
     context: Context
 ) : IGalleryRepository {
     private val dir = context.filesDir
+    private val desiredHeight = 150 * context.resources.displayMetrics.density
     private val bitmapRelay: PublishRelay<ImageData> = PublishRelay.create()
 
     override val newImageProvider: Flowable<ImageData> = RxJavaBridge.toV3Flowable(bitmapRelay.toFlowable(BackpressureStrategy.LATEST))
@@ -36,6 +37,18 @@ class GalleryRepository @Inject constructor(
                     ImageData(it.id, it.fileName)
                 }.toList().toObservable()
             }
+    }
+
+    override fun loadBitmapThumbnail(filename: String) : Single<Bitmap?> {
+        return Single.fromCallable {
+            val file = File(dir, filename)
+            val options = BitmapFactory.Options()
+            options.inJustDecodeBounds = true
+            BitmapFactory.decodeFile(file.absolutePath, options)
+            options.inSampleSize = calcInSampleSize(options)
+            options.inJustDecodeBounds = false
+            BitmapFactory.decodeFile(file.absolutePath, options)
+        }
     }
 
     override fun loadBitmap(filename: String) : Single<Bitmap?> {
@@ -68,6 +81,21 @@ class GalleryRepository @Inject constructor(
                 databaseStorage.imageDao().delete(imageData.id)
             }
         }
+    }
+
+    private fun calcInSampleSize(options: BitmapFactory.Options): Int {
+        val width = options.outWidth
+        val height = options.outHeight
+
+        var inSampleSize = 1
+
+        if (height > desiredHeight) {
+            val halfHeight = height / 2
+            while (halfHeight / inSampleSize > desiredHeight) {
+                inSampleSize *= 2
+            }
+        }
+        return inSampleSize
     }
 }
 

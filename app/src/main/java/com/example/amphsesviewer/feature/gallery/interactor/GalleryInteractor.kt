@@ -23,6 +23,10 @@ class GalleryInteractor @Inject constructor(
         return galleryRepository.saveBitmap(bitmap)
     }
 
+    override fun loadBitmapThumbnail(filename: String): Single<Bitmap?> {
+        return galleryRepository.loadBitmapThumbnail(filename)
+    }
+
     override fun loadBitmap(filename: String): Single<Bitmap?> {
         return galleryRepository.loadBitmap(filename)
     }

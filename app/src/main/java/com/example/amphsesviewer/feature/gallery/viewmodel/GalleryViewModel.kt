@@ -71,7 +71,7 @@ class GalleryViewModel(
             }
             .subscribe({ imageData ->
                 if (imagesMap[imageData.id]?.second == null) {
-                    interactor.loadBitmap(imageData.fileName)
+                    interactor.loadBitmapThumbnail(imageData.fileName)
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
