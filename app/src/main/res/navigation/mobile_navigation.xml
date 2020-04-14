@@ -9,25 +9,44 @@
         android:id="@+id/nav_home"
         android:name="com.example.amphsesviewer.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home"/>
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_gallery"
         android:name="com.example.amphsesviewer.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" >
+        tools:layout="@layout/fragment_gallery">
         <action
             android:id="@+id/action_nav_gallery_to_loadImage"
             app:destination="@id/loadImage" />
+        <action
+            android:id="@+id/action_nav_gallery_to_imageViewerFragment"
+            app:destination="@id/imageViewerFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/loadImage"
         android:name="com.example.amphsesviewer.ui.loadimage.LoadImageFragment"
         android:label="load_image_fragment"
-        tools:layout="@layout/load_image_fragment" >
+        tools:layout="@layout/load_image_fragment">
         <action
             android:id="@+id/action_loadImage_to_nav_gallery"
             app:destination="@id/nav_gallery" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageViewerFragment"
+        android:name="com.example.amphsesviewer.ui.imageviewer.ImageViewerFragment"
+        android:label="fragment_image_viewer"
+        tools:layout="@layout/fragment_image_viewer">
+        <action
+            android:id="@+id/action_imageViewerFragment_to_nav_gallery"
+            app:destination="@id/nav_gallery" />
+        <argument
+            android:name="selectedItemPosition"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="idList"
+            app:argType="long[]" />
     </fragment>
 </navigation>

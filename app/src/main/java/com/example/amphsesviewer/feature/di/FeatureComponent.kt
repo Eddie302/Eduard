@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.amphsesviewer.data.di.DataComponent
 import com.example.amphsesviewer.data.di.DataDependency
 import com.example.amphsesviewer.ui.gallery.GalleryFragment
+import com.example.amphsesviewer.ui.imageviewer.ImageViewerFragment
 import com.example.amphsesviewer.ui.loadimage.LoadImageFragment
 import dagger.Component
 import javax.inject.Singleton
@@ -13,6 +14,7 @@ import javax.inject.Singleton
 interface FeatureComponent {
     fun inject(galleryFragment: GalleryFragment)
     fun inject(loadImageFragment: LoadImageFragment)
+    fun inject(imageViewerFragment: ImageViewerFragment)
 
 
     companion object {

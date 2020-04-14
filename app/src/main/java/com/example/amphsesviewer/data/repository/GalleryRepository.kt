@@ -58,6 +58,10 @@ class GalleryRepository @Inject constructor(
         }
     }
 
+    override fun loadBitmaps(idList: List<Long>): Single<List<Bitmap>> {
+        TODO("Not yet implemented")
+    }
+
     override fun saveBitmap(bitmap: Bitmap?) : Completable {
         return Completable.fromCallable {
             if (bitmap != null) {
