@@ -1,6 +1,6 @@
 package com.example.amphsesviewer.feature.di
 
-import com.example.amphsesviewer.domain.repository.IGalleryRepository
+import com.example.amphsesviewer.domain.repository.IImageRepository
 import com.example.amphsesviewer.feature.gallery.interactor.GalleryInteractor
 import com.example.amphsesviewer.feature.gallery.interactor.IGalleryInteractor
 import com.example.amphsesviewer.feature.imageviewer.interactor.IImageViewerInteractor
@@ -14,17 +14,17 @@ import dagger.Provides
 class FeatureModule {
 
     @Provides
-    fun provideGalleryFeature(repository: IGalleryRepository) : IGalleryInteractor {
+    fun provideGalleryFeature(repository: IImageRepository) : IGalleryInteractor {
         return GalleryInteractor(repository)
     }
 
     @Provides
-    fun provideLoadImageFeature(repository: IGalleryRepository) : ILoadImageInteractor {
+    fun provideLoadImageFeature(repository: IImageRepository) : ILoadImageInteractor {
         return LoadImageInteractor(repository)
     }
 
     @Provides
-    fun provideImageViewerFeature(repository: IGalleryRepository) : IImageViewerInteractor {
+    fun provideImageViewerFeature(repository: IImageRepository) : IImageViewerInteractor {
         return ImageViewerInteractor(repository)
     }
 }

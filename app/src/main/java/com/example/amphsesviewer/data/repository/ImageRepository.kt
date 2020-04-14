@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory
 import com.example.amphsesviewer.data.db.DatabaseStorage
 import com.example.amphsesviewer.data.db.model.ImageSM
 import com.example.amphsesviewer.domain.model.ImageData
-import com.example.amphsesviewer.domain.repository.IGalleryRepository
+import com.example.amphsesviewer.domain.repository.IImageRepository
 import com.jakewharton.rxrelay2.PublishRelay
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.BackpressureStrategy
@@ -14,16 +14,17 @@ import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
 import javax.inject.Inject
 
 
-class GalleryRepository @Inject constructor(
+class ImageRepository @Inject constructor(
     private val databaseStorage: DatabaseStorage,
     context: Context
-) : IGalleryRepository {
+) : IImageRepository {
     private val dir = context.filesDir
     private val desiredHeight = 150 * context.resources.displayMetrics.density
     private val bitmapRelay: PublishRelay<ImageData> = PublishRelay.create()
@@ -51,15 +52,16 @@ class GalleryRepository @Inject constructor(
         }
     }
 
-    override fun loadBitmap(filename: String) : Single<Bitmap?> {
-        return Single.fromCallable {
-            val file = File(dir, filename)
-            BitmapFactory.decodeFile(file.absolutePath)
-        }
+    private fun loadBitmap(filename: String) : Bitmap {
+        val file = File(dir, filename)
+        return BitmapFactory.decodeFile(file.absolutePath)
     }
 
     override fun loadBitmaps(idList: List<Long>): Single<List<Bitmap>> {
-        TODO("Not yet implemented")
+        return RxJavaBridge.toV3Single(databaseStorage.imageDao().getImagesData(idList))
+            .flatMapObservable { Observable.fromIterable(it) }
+            .map { loadBitmap(it.fileName) }
+            .toList()
     }
 
     override fun saveBitmap(bitmap: Bitmap?) : Completable {

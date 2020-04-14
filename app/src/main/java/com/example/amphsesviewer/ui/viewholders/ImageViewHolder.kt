@@ -1,5 +1,6 @@
 package com.example.amphsesviewer.ui.viewholders
 
+import android.graphics.Bitmap
 import android.view.View
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.widget.ContentLoadingProgressBar
@@ -8,13 +9,7 @@ import com.example.amphsesviewer.R
 import com.example.amphsesviewer.domain.model.ImageUI
 
 class ImageViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-    fun bind(imageUI: ImageUI) {
-        val pb = view.findViewById<ContentLoadingProgressBar>(R.id.pb)
-        if (imageUI.image.get() != null) {
-            pb.hide()
-        } else {
-            pb.show()
-        }
-        view.findViewById<AppCompatImageView>(R.id.image).setImageBitmap(imageUI.image.get())
+    fun bind(bitmap: Bitmap) {
+        view.findViewById<AppCompatImageView>(R.id.image).setImageBitmap(bitmap)
     }
 }

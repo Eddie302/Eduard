@@ -1,15 +1,15 @@
 package com.example.amphsesviewer.ui.adapters
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.amphsesviewer.R
-import com.example.amphsesviewer.domain.model.ImageUI
 import com.example.amphsesviewer.ui.viewholders.ImageViewHolder
 
 class ImageViewerAdapter(private val context: Context?) : RecyclerView.Adapter<ImageViewHolder>() {
-    var images: List<ImageUI> = ArrayList()
+    var images: List<Bitmap> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.image_list_item_layout, parent, false)
