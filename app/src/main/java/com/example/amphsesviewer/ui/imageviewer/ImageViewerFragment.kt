@@ -58,9 +58,9 @@ class ImageViewerFragment : Fragment() {
     }
 
     private fun renderState(state: ImageViewerState) {
-        if (state.images != null) {
+        state.images?.let {
             imageViewerAdapter.run {
-                images = state.images
+                images = it
                 notifyDataSetChanged()
             }
             binding?.pagerImages?.setCurrentItem(args.selectedItemPosition, false)
@@ -69,8 +69,8 @@ class ImageViewerFragment : Fragment() {
 
     private fun processAction(action: ImageViewerAction) {
         when (action) {
-            is ImageViewerAction.ShowLoading -> { binding?.pb?.show() }
-            is ImageViewerAction.HideLoading -> { binding?.pb?.hide() }
+            is ImageViewerAction.ShowLoading -> { binding?.pb?.visibility = View.VISIBLE }
+            is ImageViewerAction.HideLoading -> { binding?.pb?.visibility = View.GONE }
             is ImageViewerAction.ShowError -> Toast.makeText(context, action.t.message, Toast.LENGTH_LONG).show()
         }
     }
