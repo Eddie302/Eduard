@@ -8,12 +8,11 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 
 
-interface IGalleryRepository {
+interface IImageRepository {
     val newImageProvider: Flowable<ImageData>
     fun saveBitmap(bitmap: Bitmap?) : Completable
     fun loadImagesData(): Observable<List<ImageData>>
     fun loadBitmapThumbnail(filename: String) : Single<Bitmap?>
-    fun loadBitmap(filename: String) : Single<Bitmap?>
     fun loadBitmaps(idList: List<Long>) : Single<List<Bitmap>>
     fun deleteImage(imageData: ImageData?): Completable
 }

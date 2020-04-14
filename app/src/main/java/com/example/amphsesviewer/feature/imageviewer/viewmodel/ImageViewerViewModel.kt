@@ -16,11 +16,14 @@ sealed class ImageViewerEvent : ViewEvent {
 }
 
 sealed class ImageViewerAction : ViewAction {
+    object ShowLoading: ImageViewerAction()
+    object HideLoading: ImageViewerAction()
     data class ShowError(val t: Throwable): ImageViewerAction()
 }
 
 data class ImageViewerState(
-    val images: List<Bitmap> = ArrayList()
+    val isLoading: Boolean = true,
+    val images: List<Bitmap>? = null
 ) : ViewState
 
 class ImageViewerViewModel(
@@ -34,6 +37,7 @@ class ImageViewerViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = {
+                    sendAction(ImageViewerAction.HideLoading)
                     sendNewState {
                         copy(
                             images = it
@@ -48,7 +52,10 @@ class ImageViewerViewModel(
 
     override fun invoke(event: ImageViewerEvent) {
         when (event) {
-            is ImageViewerEvent.ViewLoaded -> { loadImages(event.idList) }
+            is ImageViewerEvent.ViewLoaded -> {
+                sendAction(ImageViewerAction.ShowLoading)
+                loadImages(event.idList)
+            }
         }
     }
 }

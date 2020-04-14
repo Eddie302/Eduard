@@ -8,6 +8,15 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager_images"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/pb"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/colorPrimary"
+        android:visibility="visible" />
 
 </FrameLayout>

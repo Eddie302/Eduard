@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 
 import com.example.amphsesviewer.R
+import com.example.amphsesviewer.databinding.FragmentImageViewerBinding
 import com.example.amphsesviewer.feature.di.FeatureComponentManager
 import com.example.amphsesviewer.feature.imageviewer.viewmodel.*
 import com.example.amphsesviewer.ui.adapters.ImageViewerAdapter
@@ -18,15 +19,16 @@ import javax.inject.Inject
 
 
 class ImageViewerFragment : Fragment() {
+    private val args: ImageViewerFragmentArgs by navArgs()
 
-    val args: ImageViewerFragmentArgs by navArgs()
+    private var binding: FragmentImageViewerBinding? = null
 
     @Inject
     lateinit var imageViewerViewModelFactory: ImageViewerViewModelFactory
 
     private val viewModel: ImageViewerViewModel by viewModels { imageViewerViewModelFactory }
 
-    private lateinit var imageViewerAdpter: ImageViewerAdapter
+    private lateinit var imageViewerAdapter: ImageViewerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         FeatureComponentManager.component.inject(this)
@@ -37,13 +39,18 @@ class ImageViewerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        imageViewerAdpter = ImageViewerAdapter(context)
+        imageViewerAdapter = ImageViewerAdapter(context)
 
         viewModel.run {
             viewState.observe(viewLifecycleOwner, Observer { renderState(it) })
             action.observe(viewLifecycleOwner, Observer { processAction(it) })
         }
-        return inflater.inflate(R.layout.fragment_image_viewer, container, false)
+
+        binding = FragmentImageViewerBinding.inflate(inflater, container, false).apply {
+            pagerImages.adapter = imageViewerAdapter
+        }
+
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,13 +58,19 @@ class ImageViewerFragment : Fragment() {
     }
 
     private fun renderState(state: ImageViewerState) {
-        when (state) {
-
+        if (state.images != null) {
+            imageViewerAdapter.run {
+                images = state.images
+                notifyDataSetChanged()
+            }
+            binding?.pagerImages?.setCurrentItem(args.selectedItemPosition, false)
         }
     }
 
     private fun processAction(action: ImageViewerAction) {
         when (action) {
+            is ImageViewerAction.ShowLoading -> { binding?.pb?.show() }
+            is ImageViewerAction.HideLoading -> { binding?.pb?.hide() }
             is ImageViewerAction.ShowError -> Toast.makeText(context, action.t.message, Toast.LENGTH_LONG).show()
         }
     }
