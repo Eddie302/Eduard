@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.example.amphsesviewer.ui.views.ImageContainer
         android:id="@+id/image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -12,6 +12,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#ddd" />
+        android:background="#000" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

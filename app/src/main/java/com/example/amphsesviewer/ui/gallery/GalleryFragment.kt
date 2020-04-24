@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,11 +16,7 @@ import com.example.amphsesviewer.R
 import com.example.amphsesviewer.databinding.FragmentGalleryBinding
 import com.example.amphsesviewer.domain.model.ImageUI
 import com.example.amphsesviewer.feature.di.FeatureComponentManager
-import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryViewModelFactory
-import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryAction
-import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryEvent
-import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryState
-import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryViewModel
+import com.example.amphsesviewer.feature.gallery.viewmodel.*
 import com.example.amphsesviewer.ui.adapters.GalleryAdapter
 import com.example.amphsesviewer.ui.diffutils.ImageDiffUtilCallback
 import java.lang.ref.SoftReference
@@ -37,6 +34,10 @@ class GalleryFragment : Fragment() {
             idList.toLongArray()
         )
         findNavController().navigate(action)
+    }
+
+    private val itemSizeChangedCallback = {
+        viewModel(GalleryEvent.ItemSizeCalculated(galleryAdapter.itemWidth, galleryAdapter.itemHeight))
     }
 
     private var binding: FragmentGalleryBinding? = null
@@ -57,17 +58,18 @@ class GalleryFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val layoutManager = GridLayoutManager(context, 3)
+        val layoutManager = GridLayoutManager(context, 2)
         galleryAdapter = GalleryAdapter(context).apply {
             itemLongClickCallback = this@GalleryFragment.itemLongClickCallback
             itemClickCallback = this@GalleryFragment.itemClickCallback
+            itemSizeChangedCallback = this@GalleryFragment.itemSizeChangedCallback
         }
         viewModel.run {
             action.observe(viewLifecycleOwner, Observer {
                 processAction(it)
             })
             viewState.observe(viewLifecycleOwner, Observer {
-                renderState(it)
+                render(it)
             })
         }
         binding = FragmentGalleryBinding.inflate(inflater, container, false)
@@ -76,20 +78,21 @@ class GalleryFragment : Fragment() {
             this.rvImages.layoutManager = layoutManager
             this.rvImages.adapter = galleryAdapter
 
-//            val globalLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
-//                override fun onGlobalLayout() {
-//                    (rvImages.layoutManager as GridLayoutManager).let {
-//                        if (it.childCount > 0) {
-//                            it.getChildAt(0)?.apply {
-//
-//                            }
-//                            rvImages.viewTreeObserver.removeOnGlobalLayoutListener(this)
-//                        }
-//                    }
-//                }
-//            }
-//
-//            this.rvImages.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
+            val globalLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    (rvImages.layoutManager as GridLayoutManager).let {
+                        if (it.childCount > 0) {
+                            it.getChildAt(0)?.run {
+                                galleryAdapter.setItemSize(width, height)
+                                viewModel(GalleryEvent.ItemSizeCalculated(galleryAdapter.itemWidth, galleryAdapter.itemHeight))
+                            }
+                            rvImages.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        }
+                    }
+                }
+            }
+
+            this.rvImages.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
         }?.root
     }
 
@@ -98,16 +101,25 @@ class GalleryFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun renderState(state: GalleryState) {
-        galleryAdapter.run{
-            val imageList: List<ImageUI> = state.imagesMap.toSortedMap().map {
-                ImageUI(it.key, SoftReference(it.value))
+    private fun render(viewState: GalleryState) {
+        when (viewState.mode) {
+            GalleryMode.View -> {
+                galleryAdapter.run{
+                    val imageList: List<ImageUI> = viewState.imagesMap.toSortedMap().map {
+                        ImageUI(it.key, SoftReference(it.value))
+                    }
+                    val diffUtilCallback = ImageDiffUtilCallback(images, imageList)
+                    val result = DiffUtil.calculateDiff(diffUtilCallback)
+                    images = imageList
+                    result.dispatchUpdatesTo(this)
+                    if (diffUtilCallback.newListSize > diffUtilCallback.oldListSize) {
+                        viewModel(GalleryEvent.ItemsAdded(galleryAdapter.itemWidth, galleryAdapter.itemHeight))
+                    }
+                }
             }
-            val result = with(ImageDiffUtilCallback(images, imageList)) {
-                DiffUtil.calculateDiff(this)
+            GalleryMode.Edit -> {
+
             }
-            images = imageList
-            result.dispatchUpdatesTo(this)
         }
     }
 

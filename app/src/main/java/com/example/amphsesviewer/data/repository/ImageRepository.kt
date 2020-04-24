@@ -26,7 +26,6 @@ class ImageRepository @Inject constructor(
     context: Context
 ) : IImageRepository {
     private val dir = context.filesDir
-    private val desiredHeight = 150 * context.resources.displayMetrics.density
     private val bitmapRelay: PublishRelay<ImageData> = PublishRelay.create()
 
     override val newImageProvider: Flowable<ImageData> = RxJavaBridge.toV3Flowable(bitmapRelay.toFlowable(BackpressureStrategy.LATEST))
@@ -40,13 +39,13 @@ class ImageRepository @Inject constructor(
             }
     }
 
-    override fun loadBitmapThumbnail(filename: String) : Single<Bitmap?> {
+    override fun loadBitmapThumbnail(filename: String, minWidth: Int, minHeight: Int) : Single<Bitmap?> {
         return Single.fromCallable {
             val file = File(dir, filename)
             val options = BitmapFactory.Options()
             options.inJustDecodeBounds = true
             BitmapFactory.decodeFile(file.absolutePath, options)
-            options.inSampleSize = calcInSampleSize(options)
+            options.inSampleSize = calcInSampleSize(options, minWidth, minHeight)
             options.inJustDecodeBounds = false
             BitmapFactory.decodeFile(file.absolutePath, options)
         }
@@ -91,15 +90,16 @@ class ImageRepository @Inject constructor(
         }
     }
 
-    private fun calcInSampleSize(options: BitmapFactory.Options): Int {
+    private fun calcInSampleSize(options: BitmapFactory.Options, minWidth: Int, minHeight: Int): Int {
         val width = options.outWidth
         val height = options.outHeight
-
         var inSampleSize = 1
 
-        if (height > desiredHeight) {
+        if (width > minWidth || height > minHeight) {
+            val halfWidth = width / 2
             val halfHeight = height / 2
-            while (halfHeight / inSampleSize > desiredHeight) {
+
+            while (halfWidth / inSampleSize > minWidth || halfHeight / inSampleSize > minHeight) {
                 inSampleSize *= 2
             }
         }

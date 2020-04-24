@@ -12,7 +12,7 @@ interface IImageRepository {
     val newImageProvider: Flowable<ImageData>
     fun saveBitmap(bitmap: Bitmap?) : Completable
     fun loadImagesData(): Observable<List<ImageData>>
-    fun loadBitmapThumbnail(filename: String) : Single<Bitmap?>
+    fun loadBitmapThumbnail(filename: String, minWidth: Int, minHeight: Int) : Single<Bitmap?>
     fun loadBitmaps(idList: List<Long>) : Single<List<Bitmap>>
     fun deleteImage(imageData: ImageData?): Completable
 }

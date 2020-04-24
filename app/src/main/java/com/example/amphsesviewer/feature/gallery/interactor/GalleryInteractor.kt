@@ -23,8 +23,8 @@ class GalleryInteractor @Inject constructor(
         return imageRepository.saveBitmap(bitmap)
     }
 
-    override fun loadBitmapThumbnail(filename: String): Single<Bitmap?> {
-        return imageRepository.loadBitmapThumbnail(filename)
+    override fun loadBitmapThumbnail(filename: String, minWidth: Int, minHeight: Int): Single<Bitmap?> {
+        return imageRepository.loadBitmapThumbnail(filename, minWidth, minHeight)
     }
 
     override fun deleteImage(imageData: ImageData?): Completable {

@@ -12,7 +12,19 @@ import kotlin.collections.ArrayList
 class GalleryAdapter(private val context: Context?): RecyclerView.Adapter<ImageThumbnailViewHolder>() {
     lateinit var itemLongClickCallback: (imageData: ImageUI) -> Unit
     lateinit var itemClickCallback: (selectedItemPosition: Int, idList: List<Long>) -> Unit
+    lateinit var itemSizeChangedCallback: () -> Unit
     var images: List<ImageUI> = ArrayList()
+
+    var itemWidth = 0
+        private set
+
+    var itemHeight = 0
+        private set
+
+    fun setItemSize(width: Int, height: Int) {
+        itemWidth = width
+        itemHeight = height
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageThumbnailViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.image_grid_item_layout, parent, false)
@@ -44,5 +56,15 @@ class GalleryAdapter(private val context: Context?): RecyclerView.Adapter<ImageT
 
     override fun onBindViewHolder(holder: ImageThumbnailViewHolder, position: Int) {
         holder.bind(images[position])
+
+//        with(holder.itemView) {
+//            if (width != 0 && height != 0) {
+//                if (itemWidth != width || itemHeight != height) {
+//                    itemWidth = width
+//                    itemHeight = height
+//                    itemSizeChangedCallback()
+//                }
+//            }
+//        }
     }
 }

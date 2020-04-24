@@ -1,5 +1,6 @@
 package com.example.amphsesviewer.ui.imageviewer
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,11 +11,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 
-import com.example.amphsesviewer.R
 import com.example.amphsesviewer.databinding.FragmentImageViewerBinding
 import com.example.amphsesviewer.feature.di.FeatureComponentManager
 import com.example.amphsesviewer.feature.imageviewer.viewmodel.*
 import com.example.amphsesviewer.ui.adapters.ImageViewerAdapter
+import java.lang.ref.SoftReference
 import javax.inject.Inject
 
 
@@ -60,7 +61,7 @@ class ImageViewerFragment : Fragment() {
     private fun renderState(state: ImageViewerState) {
         state.images?.let {
             imageViewerAdapter.run {
-                images = it
+                images = it.map { SoftReference<Bitmap>(it) }
                 notifyDataSetChanged()
             }
             binding?.pagerImages?.setCurrentItem(args.selectedItemPosition, false)

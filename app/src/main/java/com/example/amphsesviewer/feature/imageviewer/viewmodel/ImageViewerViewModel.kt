@@ -22,7 +22,6 @@ sealed class ImageViewerAction : ViewAction {
 }
 
 data class ImageViewerState(
-    val isLoading: Boolean = true,
     val images: List<Bitmap>? = null
 ) : ViewState
 

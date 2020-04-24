@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1049408284357",
+    "firebase_url": "https://amphsesviewer.firebaseio.com",
+    "project_id": "amphsesviewer",
+    "storage_bucket": "amphsesviewer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049408284357:android:3fcb959227c72dea2472ac",
+        "android_client_info": {
+          "package_name": "com.example.amphsesviewer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1049408284357-8q6e0bucbios3lgdk6s4bn0h63m00fls.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFwo-4S_Pti7ctlU70BITvM10IFYGLYVQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1049408284357-8q6e0bucbios3lgdk6s4bn0h63m00fls.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

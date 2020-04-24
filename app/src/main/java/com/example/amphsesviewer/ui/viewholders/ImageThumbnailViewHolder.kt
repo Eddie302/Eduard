@@ -1,6 +1,7 @@
 package com.example.amphsesviewer.ui.viewholders
 
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,9 @@ class ImageThumbnailViewHolder(private val view: View) : RecyclerView.ViewHolder
         } else {
             pb.show()
         }
-        view.findViewById<AppCompatImageView>(R.id.image).setImageBitmap(imageUI.image.get())
+        view.findViewById<AppCompatImageView>(R.id.image).run {
+            setImageBitmap(imageUI.image.get())
+            scaleType = ImageView.ScaleType.CENTER_CROP
+        }
     }
 }
