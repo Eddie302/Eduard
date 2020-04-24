@@ -43,10 +43,6 @@ class GalleryViewModel(
     initState: GalleryState = GalleryState()
 ) : ViewModelBase<GalleryState, GalleryAction, GalleryEvent>(initState) {
 
-    private suspend fun coInit() {
-
-    }
-
     init {
         val disposable = interactor.loadImagesData()
             .subscribeOn(Schedulers.io())
