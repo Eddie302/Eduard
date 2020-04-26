@@ -1,5 +1,7 @@
 package com.example.amphsesviewer.feature.di
 
+import com.example.amphsesviewer.feature.albums.interactor.IAlbumsInteractor
+import com.example.amphsesviewer.feature.albums.viewmodel.AlbumsViewModelFactory
 import com.example.amphsesviewer.feature.gallery.interactor.IGalleryInteractor
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryViewModelFactory
 import com.example.amphsesviewer.feature.imageviewer.interactor.IImageViewerInteractor
@@ -28,6 +30,13 @@ class FeatureModelProviderModule {
     @Provides
     fun provideImageViewerViewModelFactory(interactor: IImageViewerInteractor) : ImageViewerViewModelFactory {
         return ImageViewerViewModelFactory(
+            interactor
+        )
+    }
+
+    @Provides
+    fun provideAlbumsViewModelFactory(interactor: IAlbumsInteractor) : AlbumsViewModelFactory {
+        return AlbumsViewModelFactory(
             interactor
         )
     }

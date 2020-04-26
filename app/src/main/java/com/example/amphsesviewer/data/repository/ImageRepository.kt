@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.example.amphsesviewer.data.db.DatabaseStorage
 import com.example.amphsesviewer.data.db.model.ImageSM
+import com.example.amphsesviewer.domain.model.Album
 import com.example.amphsesviewer.domain.model.ImageData
 import com.example.amphsesviewer.domain.repository.IImageRepository
 import com.jakewharton.rxrelay2.PublishRelay
@@ -34,7 +35,17 @@ class ImageRepository @Inject constructor(
         return RxJavaBridge.toV3Observable(databaseStorage.imageDao().getAll())
             .flatMap {
                 Observable.fromIterable(it).map {
-                    ImageData(it.id, it.fileName)
+                    ImageData(it.imageId, it.fileName)
+                }.toList().toObservable()
+            }
+    }
+
+    override fun loadAlbums() : Observable<List<Album>> {
+        return RxJavaBridge.toV3Observable(databaseStorage.albumDao().getAll())
+            .flatMap {
+                Observable.fromIterable(it).map {
+                    val imagesIdList = databaseStorage.imageAlbumDao().getAlbumWithImageIds(it.albumId).imageIds
+                    Album(it.albumId, it.name, imagesIdList)
                 }.toList().toObservable()
             }
     }
