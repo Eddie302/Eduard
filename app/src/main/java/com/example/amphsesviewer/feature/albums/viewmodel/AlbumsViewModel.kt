@@ -8,7 +8,9 @@ import com.example.amphsesviewer.feature.albums.interactor.IAlbumsInteractor
 
 sealed class AlbumsEvent: ViewEvent
 
-sealed class AlbumsAction: ViewAction
+sealed class AlbumsAction: ViewAction {
+    data class ShowError(val t: Throwable): AlbumsAction()
+}
 
 class AlbumsState(): ViewState
 
@@ -17,7 +19,9 @@ class AlbumsViewModel(
     initState: AlbumsState = AlbumsState()
 ) : ViewModelBase<AlbumsState, AlbumsAction, AlbumsEvent>(initState) {
 
+    init {
 
+    }
 
     override fun invoke(event: AlbumsEvent) {
         TODO("Not yet implemented")
