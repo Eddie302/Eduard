@@ -1,8 +1,6 @@
 package com.example.amphsesviewer.data.repository
 
 import android.graphics.Bitmap
-import com.example.amphsesviewer.data.datasource.ImageDataDbSource
-import com.example.amphsesviewer.data.datasource.InternalStorageDataSource
 import com.example.amphsesviewer.data.datasource.interfaces.IImageDataDbSource
 import com.example.amphsesviewer.data.datasource.interfaces.IInternalStorageDataSource
 import com.example.amphsesviewer.domain.model.ImageData
@@ -14,7 +12,7 @@ import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Completable
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 
