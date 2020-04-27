@@ -9,7 +9,7 @@ data class AlbumWithImageIds(
     @Relation(
         parentColumn = "albumId",
         entityColumn = "imageId",
-        entity = ImageSM::class,
+        entity = ImageAlbumCrossRef::class,
         projection = ["imageId"]
     )
     val imageIds: List<Long>

@@ -15,7 +15,7 @@ import kotlin.collections.HashMap
 
 
 sealed class GalleryEvent : ViewEvent {
-    object LoadClicked : GalleryEvent()
+    object LoadClicked: GalleryEvent()
     data class DeleteImage(val imageUI: ImageUI): GalleryEvent()
     data class ItemSizeCalculated(val width: Int, val height: Int): GalleryEvent()
     data class ItemsAdded(val width: Int, val height: Int): GalleryEvent()

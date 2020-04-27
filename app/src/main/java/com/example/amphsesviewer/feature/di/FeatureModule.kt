@@ -1,5 +1,6 @@
 package com.example.amphsesviewer.feature.di
 
+import com.example.amphsesviewer.domain.repository.IAlbumsRepository
 import com.example.amphsesviewer.domain.repository.IImageRepository
 import com.example.amphsesviewer.feature.albums.interactor.AlbumsInteractor
 import com.example.amphsesviewer.feature.albums.interactor.IAlbumsInteractor
@@ -31,7 +32,7 @@ class FeatureModule {
     }
 
     @Provides
-    fun provideAlbumsFeature(repository: IImageRepository) : IAlbumsInteractor {
+    fun provideAlbumsFeature(repository: IAlbumsRepository) : IAlbumsInteractor {
         return AlbumsInteractor(repository)
     }
 }

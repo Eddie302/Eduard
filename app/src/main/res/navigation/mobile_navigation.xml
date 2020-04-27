@@ -49,4 +49,10 @@
             android:name="idList"
             app:argType="long[]" />
     </fragment>
+    <fragment
+        android:id="@+id/albumsFragment"
+        android:name="com.example.amphsesviewer.ui.albums.AlbumsFragment"
+        android:label="fragment_albums"
+        tools:layout="@layout/fragment_albums" >
+    </fragment>
 </navigation>

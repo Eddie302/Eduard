@@ -8,13 +8,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.example.amphsesviewer.databinding.FragmentAlbumsBinding
-import com.example.amphsesviewer.feature.albums.viewmodel.AlbumsAction
-import com.example.amphsesviewer.feature.albums.viewmodel.AlbumsState
-import com.example.amphsesviewer.feature.albums.viewmodel.AlbumsViewModel
-import com.example.amphsesviewer.feature.albums.viewmodel.AlbumsViewModelFactory
+import com.example.amphsesviewer.feature.albums.viewmodel.*
+import com.example.amphsesviewer.feature.di.FeatureComponentManager
 import com.example.amphsesviewer.ui.adapters.AlbumsAdapter
 import javax.inject.Inject
 
@@ -29,6 +28,11 @@ class AlbumsFragment : Fragment() {
     private lateinit var albumsAdapter: AlbumsAdapter
 
     private var binding: FragmentAlbumsBinding? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        FeatureComponentManager.component.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +50,7 @@ class AlbumsFragment : Fragment() {
         binding = FragmentAlbumsBinding.inflate(inflater, container, false).apply {
             rvAlbums.layoutManager = LinearLayoutManager(context)
             rvAlbums.adapter = albumsAdapter
+            btnNewAlbum.setOnClickListener { viewModel(AlbumsEvent.NewAlbumClicked) }
         }
 
         return binding?.root
@@ -58,6 +63,7 @@ class AlbumsFragment : Fragment() {
     private fun processAction(action: AlbumsAction) {
         when(action) {
             is AlbumsAction.ShowError -> Toast.makeText(context, action.t.message, Toast.LENGTH_LONG).show()
+            is AlbumsAction.OpenNewAlbumCreator -> {}//findNavController().navigate()
         }
     }
 

@@ -16,5 +16,4 @@ interface IImageRepository {
     fun loadBitmapThumbnail(filename: String, minWidth: Int, minHeight: Int) : Single<Bitmap?>
     fun loadBitmaps(idList: List<Long>) : Single<List<Bitmap>>
     fun deleteImage(imageData: ImageData?): Completable
-    fun loadAlbums() : Observable<List<Album>>
 }
