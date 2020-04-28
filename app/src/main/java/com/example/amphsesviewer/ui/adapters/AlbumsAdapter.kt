@@ -10,7 +10,7 @@ import com.example.amphsesviewer.ui.viewholders.AlbumViewHolder
 
 class AlbumsAdapter(private val context: Context?) : RecyclerView.Adapter<AlbumViewHolder>() {
 
-    val albums: List<Album> = ArrayList()
+    var albums: List<Album> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.album_list_item_layout, parent, false)

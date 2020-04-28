@@ -16,6 +16,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_check_image"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_check_box_black"
+        android:tint="@color/colorPrimary"
+        app:layout_constraintTop_toTopOf="@+id/image"
+        app:layout_constraintEnd_toEndOf="@id/image"/>
+
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/pb"
         style="?android:attr/progressBarStyleLarge"

@@ -5,4 +5,5 @@ import io.reactivex.rxjava3.core.Observable
 
 interface IAlbumsDbSource {
     fun loadAlbums(): Observable<List<Album>>
+    fun createAlbum(name: String)
 }

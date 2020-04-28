@@ -2,6 +2,7 @@ package com.example.amphsesviewer.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.amphsesviewer.R
@@ -10,16 +11,28 @@ import com.example.amphsesviewer.ui.viewholders.ImageThumbnailViewHolder
 import kotlin.collections.ArrayList
 
 class GalleryAdapter(private val context: Context?): RecyclerView.Adapter<ImageThumbnailViewHolder>() {
-    lateinit var itemLongClickCallback: (imageData: ImageUI) -> Unit
+//    lateinit var itemLongClickCallback: (imageData: ImageUI) -> Unit
+    lateinit var itemLongClickCallback: () -> Unit
     lateinit var itemClickCallback: (selectedItemPosition: Int, idList: List<Long>) -> Unit
     lateinit var itemSizeChangedCallback: () -> Unit
+
     var images: List<ImageUI> = ArrayList()
+    private val checkedIds: HashSet<Long> = HashSet()
 
     var itemWidth = 0
         private set
 
     var itemHeight = 0
         private set
+
+    var isEditEnabled: Boolean = false
+        set(value) {
+            if (value != field) {
+                field = value
+                notifyDataSetChanged()
+            }
+        }
+
 
     fun setItemSize(width: Int, height: Int) {
         itemWidth = width
@@ -34,13 +47,30 @@ class GalleryAdapter(private val context: Context?): RecyclerView.Adapter<ImageT
     override fun onViewAttachedToWindow(holder: ImageThumbnailViewHolder) {
         holder.itemView.run {
             setOnLongClickListener {
-                val position = holder.adapterPosition
-                itemLongClickCallback(images[position])
+                itemLongClickCallback()
                 false
+//                val position = holder.adapterPosition
+//                itemLongClickCallback(images[position])
+//                false
             }
             setOnClickListener {
-                val position = holder.adapterPosition
-                itemClickCallback(position, images.map { it.id })
+                if (isEditEnabled) {
+                    val position = holder.adapterPosition
+                    val image = images[position]
+
+                    if (!image.isChecked) {
+                        checkedIds.add(image.id)
+                        image.isChecked = true
+                    } else {
+                        checkedIds.remove(image.id)
+                        image.isChecked = false
+                    }
+
+                    notifyItemChanged(position)
+                } else {
+                    val position = holder.adapterPosition
+                    itemClickCallback(position, images.map { it.id })
+                }
             }
         }
     }
@@ -55,7 +85,7 @@ class GalleryAdapter(private val context: Context?): RecyclerView.Adapter<ImageT
     override fun getItemCount(): Int = images.size
 
     override fun onBindViewHolder(holder: ImageThumbnailViewHolder, position: Int) {
-        holder.bind(images[position])
+        holder.bind(images[position], isEditEnabled)
 
 //        with(holder.itemView) {
 //            if (width != 0 && height != 0) {

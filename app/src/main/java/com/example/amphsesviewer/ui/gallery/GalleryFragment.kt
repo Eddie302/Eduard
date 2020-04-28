@@ -24,6 +24,10 @@ import javax.inject.Inject
 
 class GalleryFragment : Fragment() {
 
+    private val longClickCallback: () -> Unit = {
+        viewModel(GalleryEvent.ModeChangeTriggered)
+    }
+
     private val itemLongClickCallback = { imageData: ImageUI ->
         viewModel(GalleryEvent.DeleteImage(imageData))
     }
@@ -60,7 +64,7 @@ class GalleryFragment : Fragment() {
     ): View? {
         val layoutManager = GridLayoutManager(context, 2)
         galleryAdapter = GalleryAdapter(context).apply {
-            itemLongClickCallback = this@GalleryFragment.itemLongClickCallback
+            itemLongClickCallback = this@GalleryFragment.longClickCallback
             itemClickCallback = this@GalleryFragment.itemClickCallback
             itemSizeChangedCallback = this@GalleryFragment.itemSizeChangedCallback
         }
@@ -104,7 +108,11 @@ class GalleryFragment : Fragment() {
     private fun render(viewState: GalleryState) {
         when (viewState.mode) {
             GalleryMode.View -> {
+                binding?.run {
+
+                }
                 galleryAdapter.run{
+                    isEditEnabled = false
                     val imageList: List<ImageUI> = viewState.imagesMap.toSortedMap().map {
                         ImageUI(it.key, SoftReference(it.value))
                     }
@@ -118,7 +126,13 @@ class GalleryFragment : Fragment() {
                 }
             }
             GalleryMode.Edit -> {
+                binding?.run {
 
+                }
+                galleryAdapter.run {
+                    isEditEnabled = true
+                    itemLongClickCallback = {}
+                }
             }
         }
     }

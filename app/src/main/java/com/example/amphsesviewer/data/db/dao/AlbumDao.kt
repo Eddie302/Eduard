@@ -1,6 +1,7 @@
 package com.example.amphsesviewer.data.db.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import com.example.amphsesviewer.data.db.model.AlbumSM
 import io.reactivex.Observable
@@ -8,6 +9,10 @@ import io.reactivex.Single
 
 @Dao
 interface AlbumDao {
+
+    @Insert
+    fun insert(albumSM: AlbumSM)
+
     @Query("SELECT * FROM album WHERE albumId = :id")
     fun getById(id: Long): Single<AlbumSM>
 

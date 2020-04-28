@@ -19,6 +19,7 @@ sealed class GalleryEvent : ViewEvent {
     data class DeleteImage(val imageUI: ImageUI): GalleryEvent()
     data class ItemSizeCalculated(val width: Int, val height: Int): GalleryEvent()
     data class ItemsAdded(val width: Int, val height: Int): GalleryEvent()
+    object ModeChangeTriggered: GalleryEvent()
 }
 
 sealed class GalleryAction:
@@ -117,6 +118,7 @@ class GalleryViewModel(
             is GalleryEvent.DeleteImage -> deleteImage(viewState.value!!.imagesDataMap[event.imageUI.id])
             is GalleryEvent.ItemSizeCalculated -> loadBitmaps(event.width, event.height)
             is GalleryEvent.ItemsAdded -> loadBitmaps(event.width, event.height)
+            is GalleryEvent.ModeChangeTriggered -> sendNewState { copy(mode = if (mode == GalleryMode.View) GalleryMode.Edit else GalleryMode.View) }
         }
     }
 }
