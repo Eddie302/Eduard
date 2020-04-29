@@ -17,7 +17,7 @@ class GalleryAdapter(private val context: Context?): RecyclerView.Adapter<ImageT
     lateinit var itemSizeChangedCallback: () -> Unit
 
     var images: List<ImageUI> = ArrayList()
-    private val checkedIds: HashSet<Long> = HashSet()
+    val checkedIds: HashSet<Long> = HashSet()
 
     var itemWidth = 0
         private set

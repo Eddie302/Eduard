@@ -8,5 +8,6 @@ interface IImageDataDbSource {
     fun loadImagesData(): Observable<List<ImageSM>>
     fun loadImagesData(idList: List<Long>): Single<List<ImageSM>>
     fun deleteImageData(imageId: Long)
+    fun deleteImagesData(imageIds: List<Long>)
     fun saveImageData(filename: String)
 }

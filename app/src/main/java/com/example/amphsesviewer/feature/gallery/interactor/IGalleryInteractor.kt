@@ -14,4 +14,5 @@ interface IGalleryInteractor {
     fun saveBitmap(bitmap: Bitmap): Completable
     fun loadBitmapThumbnail(filename: String, minWidth: Int, minHeight: Int): Single<Bitmap?>
     fun deleteImage(imageData: ImageData?): Completable
+    fun deleteImages(imageIds: List<Long>): Completable
 }

@@ -28,10 +28,6 @@ class GalleryFragment : Fragment() {
         viewModel(GalleryEvent.ModeChangeTriggered)
     }
 
-    private val itemLongClickCallback = { imageData: ImageUI ->
-        viewModel(GalleryEvent.DeleteImage(imageData))
-    }
-
     private val itemClickCallback = { selectedItemPosition: Int, idList: List<Long> ->
         val action = GalleryFragmentDirections.actionNavGalleryToImageViewerFragment(
             selectedItemPosition,
@@ -79,6 +75,7 @@ class GalleryFragment : Fragment() {
         binding = FragmentGalleryBinding.inflate(inflater, container, false)
         return binding?.apply {
             this.btnLoad.setOnClickListener { viewModel(GalleryEvent.LoadClicked) }
+            this.btnDelete.setOnClickListener { viewModel(GalleryEvent.DeleteClicked(galleryAdapter.checkedIds.toList())) }
             this.rvImages.layoutManager = layoutManager
             this.rvImages.adapter = galleryAdapter
 
@@ -109,7 +106,8 @@ class GalleryFragment : Fragment() {
         when (viewState.mode) {
             GalleryMode.View -> {
                 binding?.run {
-
+                    btnDelete.visibility = View.GONE
+                    btnLoad.visibility = View.VISIBLE
                 }
                 galleryAdapter.run{
                     isEditEnabled = false
@@ -128,7 +126,8 @@ class GalleryFragment : Fragment() {
             }
             GalleryMode.Edit -> {
                 binding?.run {
-
+                    btnLoad.visibility = View.GONE
+                    btnDelete.visibility = View.VISIBLE
                 }
                 galleryAdapter.run {
                     isEditEnabled = true

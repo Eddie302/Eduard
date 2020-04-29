@@ -30,4 +30,8 @@ class GalleryInteractor @Inject constructor(
     override fun deleteImage(imageData: ImageData?): Completable {
         return imageRepository.deleteImage(imageData)
     }
+
+    override fun deleteImages(imageIds: List<Long>): Completable {
+        return imageRepository.deleteImages(imageIds)
+    }
 }

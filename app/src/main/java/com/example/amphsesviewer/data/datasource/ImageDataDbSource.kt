@@ -25,4 +25,8 @@ class ImageDataDbSource @Inject constructor(
     override fun saveImageData(filename: String) {
         databaseStorage.imageDao().insert(ImageSM(fileName = filename))
     }
+
+    override fun deleteImagesData(imageIds: List<Long>) {
+        databaseStorage.imageDao().delete(imageIds)
+    }
 }

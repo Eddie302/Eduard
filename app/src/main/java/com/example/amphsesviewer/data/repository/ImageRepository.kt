@@ -12,6 +12,7 @@ import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.UUID
 import javax.inject.Inject
 
@@ -62,6 +63,21 @@ class ImageRepository @Inject constructor(
                     imageDataDbSource.deleteImageData(imageData.id)
                 }
             }
+        }
+    }
+
+    override fun deleteImages(imageIds: List<Long>): Completable {
+        return Completable.fromCallable {
+            imageDataDbSource.loadImagesData(imageIds)
+                .subscribeBy (
+                    onSuccess = {
+                        it.forEach {
+                            internalStorageDataSource.deleteBitmap(it.fileName)
+                        }
+                        imageDataDbSource.deleteImagesData(it.map { it.imageId })
+                    },
+                    onError = {}
+                )
         }
     }
 }

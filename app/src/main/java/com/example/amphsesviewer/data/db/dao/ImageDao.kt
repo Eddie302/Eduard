@@ -19,4 +19,7 @@ interface ImageDao {
 
     @Query("DELETE FROM image WHERE imageId = :id")
     fun delete(id: Long): Int
+
+    @Query("DELETE FROM image WHERE imageId IN (:ids)")
+    fun delete(ids: List<Long>)
 }

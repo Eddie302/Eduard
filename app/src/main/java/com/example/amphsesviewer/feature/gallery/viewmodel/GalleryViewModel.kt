@@ -16,6 +16,7 @@ import kotlin.collections.HashMap
 
 sealed class GalleryEvent : ViewEvent {
     object LoadClicked: GalleryEvent()
+    data class DeleteClicked(val imageIds: List<Long>): GalleryEvent()
     data class DeleteImage(val imageUI: ImageUI): GalleryEvent()
     data class ItemSizeCalculated(val width: Int, val height: Int): GalleryEvent()
     data class ItemsAdded(val width: Int, val height: Int): GalleryEvent()
@@ -93,6 +94,17 @@ class GalleryViewModel(
             .subscribe({}, { sendAction(GalleryAction.ShowError(it)) })
     }
 
+    private fun deleteImages(imageIds: List<Long>) {
+        interactor.deleteImages(imageIds)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onComplete = { sendNewState { copy(mode = GalleryMode.View) }},
+                onError = { sendAction(GalleryAction.ShowError(it)) }
+            )
+
+    }
+
     private fun loadBitmaps(width: Int, height: Int) {
         viewState.value?.let { state ->
             state.imagesDataMap.forEach { (_, imageData) ->
@@ -119,6 +131,7 @@ class GalleryViewModel(
             is GalleryEvent.ItemSizeCalculated -> loadBitmaps(event.width, event.height)
             is GalleryEvent.ItemsAdded -> loadBitmaps(event.width, event.height)
             is GalleryEvent.ModeChangeTriggered -> sendNewState { copy(mode = if (mode == GalleryMode.View) GalleryMode.Edit else GalleryMode.View) }
+            is GalleryEvent.DeleteClicked -> deleteImages(event.imageIds)
         }
     }
 }
