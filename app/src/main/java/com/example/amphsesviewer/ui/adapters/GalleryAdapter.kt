@@ -47,12 +47,14 @@ class GalleryAdapter(private val context: Context?): RecyclerView.Adapter<ImageT
     override fun onViewAttachedToWindow(holder: ImageThumbnailViewHolder) {
         holder.itemView.run {
             setOnLongClickListener {
+                val position = holder.adapterPosition
+                val image = images[position]
                 itemLongClickCallback()
+                checkedIds.add(image.id)
+                image.isChecked = true
                 false
-//                val position = holder.adapterPosition
-//                itemLongClickCallback(images[position])
-//                false
             }
+
             setOnClickListener {
                 if (isEditEnabled) {
                     val position = holder.adapterPosition

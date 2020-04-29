@@ -113,6 +113,7 @@ class GalleryFragment : Fragment() {
                 }
                 galleryAdapter.run{
                     isEditEnabled = false
+                    itemLongClickCallback = this@GalleryFragment.longClickCallback
                     val imageList: List<ImageUI> = viewState.imagesMap.toSortedMap().map {
                         ImageUI(it.key, SoftReference(it.value))
                     }
