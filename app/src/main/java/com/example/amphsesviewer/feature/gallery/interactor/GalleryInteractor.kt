@@ -19,6 +19,10 @@ class GalleryInteractor @Inject constructor(
         return imageRepository.loadImagesData()
     }
 
+    override fun loadImagesData(imageIds: List<Long>) : Single<List<ImageData>> {
+        return imageRepository.loadImagesData(imageIds)
+    }
+
     override fun saveBitmap(bitmap: Bitmap): Completable {
         return imageRepository.saveBitmap(bitmap)
     }

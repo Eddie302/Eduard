@@ -6,6 +6,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "image")
 data class ImageSM(
     @PrimaryKey(autoGenerate = true)
-    val imageId: Long = 0,
+    val imageId: Long = VAL_AUTO,
     val fileName: String
 )
+
+private const val VAL_AUTO = 0L

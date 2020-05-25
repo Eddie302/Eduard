@@ -12,9 +12,26 @@ class AlbumsAdapter(private val context: Context?) : RecyclerView.Adapter<AlbumV
 
     var albums: List<Album> = ArrayList()
 
+    lateinit var itemClickCallback: (imageIds: List<Long>) -> Unit
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.album_list_item_layout, parent, false)
         return AlbumViewHolder(view)
+    }
+
+    override fun onViewAttachedToWindow(holder: AlbumViewHolder) {
+        holder.itemView.run {
+            setOnClickListener {
+                val position = holder.adapterPosition
+                itemClickCallback(albums[position].ImagesId)
+            }
+        }
+    }
+
+    override fun onViewDetachedFromWindow(holder: AlbumViewHolder) {
+        holder.itemView.run {
+            setOnClickListener(null)
+        }
     }
 
     override fun getItemCount(): Int = albums.size

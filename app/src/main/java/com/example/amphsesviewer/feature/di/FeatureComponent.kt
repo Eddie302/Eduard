@@ -3,6 +3,7 @@ package com.example.amphsesviewer.feature.di
 import android.content.Context
 import com.example.amphsesviewer.data.di.DataComponent
 import com.example.amphsesviewer.data.di.DataDependency
+import com.example.amphsesviewer.ui.album.AlbumFragment
 import com.example.amphsesviewer.ui.albums.AlbumsFragment
 import com.example.amphsesviewer.ui.gallery.GalleryFragment
 import com.example.amphsesviewer.ui.imageviewer.ImageViewerFragment
@@ -14,6 +15,7 @@ import javax.inject.Singleton
 @Component(modules = [FeatureModule::class, FeatureModelProviderModule::class], dependencies = [DataDependency::class])
 interface FeatureComponent {
     fun inject(albumsFragment: AlbumsFragment)
+    fun inject(albumFragment: AlbumFragment)
     fun inject(galleryFragment: GalleryFragment)
     fun inject(loadImageFragment: LoadImageFragment)
     fun inject(imageViewerFragment: ImageViewerFragment)

@@ -8,6 +8,7 @@ import com.example.amphsesviewer.feature.ViewEvent
 import com.example.amphsesviewer.feature.ViewModelBase
 import com.example.amphsesviewer.feature.ViewState
 import com.example.amphsesviewer.feature.gallery.interactor.IGalleryInteractor
+import com.example.amphsesviewer.ui.gallery.GalleryMode
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -20,7 +21,10 @@ sealed class GalleryEvent : ViewEvent {
     data class DeleteImage(val imageUI: ImageUI): GalleryEvent()
     data class ItemSizeCalculated(val width: Int, val height: Int): GalleryEvent()
     data class ItemsAdded(val width: Int, val height: Int): GalleryEvent()
-    object ModeChangeTriggered: GalleryEvent()
+    object SetEditMode: GalleryEvent()
+    object SetViewMode: GalleryEvent()
+    data class LoadImages(val ids: List<Long>): GalleryEvent()
+    object LoadAllImages: GalleryEvent()
 }
 
 sealed class GalleryAction:
@@ -29,15 +33,10 @@ sealed class GalleryAction:
     data class ShowError(val t: Throwable): GalleryAction()
 }
 
-enum class GalleryMode {
-    View,
-    Edit
-}
-
 data class GalleryState(
     val mode: GalleryMode = GalleryMode.View,
-    val imagesDataMap: Map<Long, ImageData> = HashMap(),
-    val imagesMap: Map<Long, Bitmap?> = HashMap()
+    val imagesDataMap: Map<Long, ImageData> = emptyMap(),
+    val imagesMap: Map<Long, Bitmap?> = emptyMap()
 ): ViewState
 
 class GalleryViewModel(
@@ -46,14 +45,14 @@ class GalleryViewModel(
 ) : ViewModelBase<GalleryState, GalleryAction, GalleryEvent>(initState) {
 
     init {
-        val disposable = interactor.loadImagesData()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onNext = { processImageData(it) },
-                onError = { sendAction(GalleryAction.ShowError(it)) }
-            )
-        compositeDisposable.add(disposable)
+//        val disposable = interactor.loadImagesData()
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribeBy(
+//                onNext = { processImageData(it) },
+//                onError = { sendAction(GalleryAction.ShowError(it)) }
+//            )
+//        compositeDisposable.add(disposable)
     }
 
     private fun addBitmap (id: Long, bitmap: Bitmap?) {
@@ -105,6 +104,28 @@ class GalleryViewModel(
 
     }
 
+    private fun loadData() {
+        val disposable = interactor.loadImagesData()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onNext = { processImageData(it) },
+                onError = { sendAction(GalleryAction.ShowError(it)) }
+            )
+        compositeDisposable.add(disposable)
+    }
+
+    private fun loadData(ids: List<Long>) {
+        val disposable = interactor.loadImagesData(ids)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = { processImageData(it) },
+                onError = { sendAction(GalleryAction.ShowError(it)) }
+            )
+        compositeDisposable.add(disposable)
+    }
+
     private fun loadBitmaps(width: Int, height: Int) {
         viewState.value?.let { state ->
             state.imagesDataMap.forEach { (_, imageData) ->
@@ -130,8 +151,11 @@ class GalleryViewModel(
             is GalleryEvent.DeleteImage -> deleteImage(viewState.value!!.imagesDataMap[event.imageUI.id])
             is GalleryEvent.ItemSizeCalculated -> loadBitmaps(event.width, event.height)
             is GalleryEvent.ItemsAdded -> loadBitmaps(event.width, event.height)
-            is GalleryEvent.ModeChangeTriggered -> sendNewState { copy(mode = if (mode == GalleryMode.View) GalleryMode.Edit else GalleryMode.View) }
+            is GalleryEvent.SetEditMode -> sendNewState { copy(mode = GalleryMode.Edit) }
+            is GalleryEvent.SetViewMode -> sendNewState { copy(mode = GalleryMode.View) }
             is GalleryEvent.DeleteClicked -> deleteImages(event.imageIds)
+            is GalleryEvent.LoadImages -> loadData(event.ids)
+            is GalleryEvent.LoadAllImages -> loadData()
         }
     }
 }

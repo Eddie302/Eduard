@@ -15,7 +15,11 @@
         android:id="@+id/nav_albums"
         android:name="com.example.amphsesviewer.ui.albums.AlbumsFragment"
         android:label="@string/menu_albums"
-        tools:layout="@layout/fragment_albums"/>
+        tools:layout="@layout/fragment_albums">
+        <action
+            android:id="@+id/action_nav_albums_to_albumFragment"
+            app:destination="@id/albumFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_gallery"
@@ -53,6 +57,18 @@
             android:defaultValue="0" />
         <argument
             android:name="idList"
+            app:argType="long[]" />
+    </fragment>
+    <fragment
+        android:id="@+id/albumFragment"
+        android:name="com.example.amphsesviewer.ui.album.AlbumFragment"
+        android:label="fragment_album"
+        tools:layout="@layout/fragment_album" >
+        <action
+            android:id="@+id/action_albumFragment_to_nav_albums"
+            app:destination="@id/nav_albums" />
+        <argument
+            android:name="imageIds"
             app:argType="long[]" />
     </fragment>
 

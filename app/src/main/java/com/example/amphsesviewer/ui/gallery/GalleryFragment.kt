@@ -22,10 +22,10 @@ import com.example.amphsesviewer.ui.diffutils.ImageDiffUtilCallback
 import java.lang.ref.SoftReference
 import javax.inject.Inject
 
-class GalleryFragment : Fragment() {
+class GalleryFragment : Fragment(), IGallery {
 
     private val longClickCallback: () -> Unit = {
-        viewModel(GalleryEvent.ModeChangeTriggered)
+        viewModel(GalleryEvent.SetEditMode)
     }
 
     private val itemClickCallback = { selectedItemPosition: Int, idList: List<Long> ->
@@ -65,6 +65,7 @@ class GalleryFragment : Fragment() {
             itemSizeChangedCallback = this@GalleryFragment.itemSizeChangedCallback
         }
         viewModel.run {
+
             action.observe(viewLifecycleOwner, Observer {
                 processAction(it)
             })
@@ -105,23 +106,12 @@ class GalleryFragment : Fragment() {
     private fun render(viewState: GalleryState) {
         when (viewState.mode) {
             GalleryMode.View -> {
+                galleryAdapter.isEditEnabled = false
+                galleryAdapter.itemLongClickCallback = this@GalleryFragment.longClickCallback
+
                 binding?.run {
                     btnDelete.visibility = View.GONE
                     btnLoad.visibility = View.VISIBLE
-                }
-                galleryAdapter.run{
-                    isEditEnabled = false
-                    itemLongClickCallback = this@GalleryFragment.longClickCallback
-                    val imageList: List<ImageUI> = viewState.imagesMap.toSortedMap().map {
-                        ImageUI(it.key, SoftReference(it.value))
-                    }
-                    val diffUtilCallback = ImageDiffUtilCallback(images, imageList)
-                    val result = DiffUtil.calculateDiff(diffUtilCallback)
-                    images = imageList
-                    result.dispatchUpdatesTo(this)
-                    if (diffUtilCallback.newListSize > diffUtilCallback.oldListSize) {
-                        viewModel(GalleryEvent.ItemsAdded(galleryAdapter.itemWidth, galleryAdapter.itemHeight))
-                    }
                 }
             }
             GalleryMode.Edit -> {
@@ -135,10 +125,42 @@ class GalleryFragment : Fragment() {
                 }
             }
         }
+
+        galleryAdapter.run{
+
+
+            val imageList: List<ImageUI> = viewState.imagesMap.toSortedMap().map {
+                ImageUI(it.key, SoftReference(it.value))
+            }
+            val diffUtilCallback = ImageDiffUtilCallback(images, imageList)
+            val result = DiffUtil.calculateDiff(diffUtilCallback)
+            images = imageList
+            result.dispatchUpdatesTo(this)
+            if (diffUtilCallback.newListSize > diffUtilCallback.oldListSize) {
+                viewModel(GalleryEvent.ItemsAdded(galleryAdapter.itemWidth, galleryAdapter.itemHeight))
+            }
+        }
     }
 
     private fun processAction(action: GalleryAction) = when (action) {
         is GalleryAction.OpenImageLoader -> findNavController().navigate(R.id.action_nav_gallery_to_loadImage)
         is GalleryAction.ShowError -> Toast.makeText(context, action.t.message, Toast.LENGTH_LONG).show()
     }
+
+    override fun loadImages(ids: List<Long>) {
+        viewModel(GalleryEvent.LoadImages(ids))
+    }
+
+    override fun loadAllImages() {
+        viewModel(GalleryEvent.LoadAllImages)
+    }
+
+    override var mode: GalleryMode = GalleryMode.View
+        set(value) {
+            field = value
+            when(value) {
+                GalleryMode.Edit -> { viewModel(GalleryEvent.SetEditMode) }
+                GalleryMode.View -> { viewModel(GalleryEvent.SetViewMode) }
+            }
+        }
 }

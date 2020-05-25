@@ -34,6 +34,15 @@ class ImageRepository @Inject constructor(
             }
     }
 
+    override fun loadImagesData(imageIds: List<Long>): Single<List<ImageData>> {
+        return imageDataDbSource.loadImagesData(imageIds)
+            .flatMap {
+                Observable.fromIterable(it).map { imageSM ->
+                    ImageData(imageSM.imageId, imageSM.fileName)
+                }.toList()
+            }
+    }
+
     override fun loadBitmapThumbnail(filename: String, minWidth: Int, minHeight: Int) : Single<Bitmap?> {
         return Single.fromCallable {
             internalStorageDataSource.loadBitmapThumbnail(filename, minWidth, minHeight)

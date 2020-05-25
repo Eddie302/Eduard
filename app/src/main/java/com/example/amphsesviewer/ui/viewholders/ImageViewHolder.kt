@@ -2,6 +2,7 @@ package com.example.amphsesviewer.ui.viewholders
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.LruCache
 import android.view.View
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.RecyclerView

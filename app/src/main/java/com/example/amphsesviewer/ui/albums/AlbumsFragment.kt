@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.amphsesviewer.R
@@ -34,7 +35,12 @@ class AlbumsFragment : Fragment() {
 
     private var binding: FragmentAlbumsBinding? = null
 
-    private val itemClickCallback = {}
+    private val itemClickCallback = { imageIds: List<Long> ->
+        val action = AlbumsFragmentDirections.actionNavAlbumsToAlbumFragment(
+            imageIds.toLongArray()
+        )
+        findNavController().navigate(action)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         FeatureComponentManager.component.inject(this)
@@ -46,7 +52,7 @@ class AlbumsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         albumsAdapter = AlbumsAdapter(context).apply {
-
+            itemClickCallback = this@AlbumsFragment.itemClickCallback
         }
 
         viewModel.run {

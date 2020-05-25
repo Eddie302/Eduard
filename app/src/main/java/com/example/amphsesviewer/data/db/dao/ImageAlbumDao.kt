@@ -10,6 +10,6 @@ interface ImageAlbumDao {
     @Query("SELECT * FROM album WHERE albumId = :albumId")
     fun getAlbumWithImageIds(albumId: Long): AlbumWithImageIds
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(imageAlbum: ImageAlbumCrossRef)
 }
