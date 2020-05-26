@@ -13,13 +13,23 @@
         android:name="com.example.amphsesviewer.ui.gallery.GalleryFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnEdit"
+        app:layout_constraintBottom_toTopOf="@+id/btn_edit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnEdit"
+        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="save"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_edit"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="add or remove images"

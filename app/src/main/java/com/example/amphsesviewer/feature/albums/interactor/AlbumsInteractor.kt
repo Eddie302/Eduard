@@ -19,8 +19,8 @@ class AlbumsInteractor @Inject constructor(
         return albumsRepository.createAlbum(name)
     }
 
-    override fun addIdsToAlbum(albumId: Long, imageIds: List<Long>) {
-        TODO("Not yet implemented")
+    override fun saveImages(albumId: Long, imageIds: List<Long>): Completable {
+        return albumsRepository.saveImages(albumId, imageIds)
     }
 
     override fun loadAlbums(): Observable<List<Album>> {

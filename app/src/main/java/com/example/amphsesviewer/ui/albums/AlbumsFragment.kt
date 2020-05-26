@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.amphsesviewer.R
 
 import com.example.amphsesviewer.databinding.FragmentAlbumsBinding
+import com.example.amphsesviewer.domain.model.Album
 import com.example.amphsesviewer.feature.albums.viewmodel.*
 import com.example.amphsesviewer.feature.di.FeatureComponentManager
 import com.example.amphsesviewer.ui.adapters.AlbumsAdapter
@@ -34,11 +35,13 @@ class AlbumsFragment : Fragment() {
 
     private var binding: FragmentAlbumsBinding? = null
 
-    private val itemClickCallback = { imageIds: List<Long> -> navigateToAlbum(imageIds) }
+    private val itemClickCallback = { album: Album -> navigateToAlbum(album) }
 
-    private fun navigateToAlbum(imageIds: List<Long>? = null) {
+    private fun navigateToAlbum(album: Album? = null) {
         val action = AlbumsFragmentDirections.actionNavAlbumsToAlbumFragment(
-            imageIds?.toLongArray()
+            album?.ImagesId?.toLongArray(),
+            album?.name,
+            album?.id ?: ID_DEFAULT
         )
         findNavController().navigate(action)
     }
@@ -111,3 +114,5 @@ class AlbumsFragment : Fragment() {
         super.onDestroy()
     }
 }
+
+const val ID_DEFAULT = -1L

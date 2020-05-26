@@ -43,7 +43,7 @@ class FeatureModelProviderModule {
     }
 
     @Provides
-    fun provideAlbumViewModelFactory(): AlbumViewModelFactory {
-        return AlbumViewModelFactory()
+    fun provideAlbumViewModelFactory(interactor: IAlbumsInteractor): AlbumViewModelFactory {
+        return AlbumViewModelFactory(interactor)
     }
 }

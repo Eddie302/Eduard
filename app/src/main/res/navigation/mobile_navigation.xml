@@ -55,6 +55,13 @@
         <action
             android:id="@+id/action_albumFragment_to_loadImage"
             app:destination="@id/nav_load_image" />
+        <argument
+            android:name="name"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="id"
+            app:argType="long" />
     </fragment>
 
 </navigation>

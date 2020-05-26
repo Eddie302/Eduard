@@ -20,4 +20,11 @@ class AlbumsRepository @Inject constructor(
             albumsDbSource.createAlbum(name)
         }
     }
+
+    override fun saveImages(albumId: Long, imageIds: List<Long>): Completable {
+        return Completable.fromCallable {
+            albumsDbSource.saveImages(albumId, imageIds)
+        }
+    }
+
 }

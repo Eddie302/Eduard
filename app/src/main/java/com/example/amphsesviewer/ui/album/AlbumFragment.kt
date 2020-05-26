@@ -48,9 +48,13 @@ class AlbumFragment : Fragment() {
         }
 
         binding = FragmentAlbumBinding.inflate(inflater, container, false).apply {
-
             btnEdit.setOnClickListener {
                 viewModel(AlbumEvent.SetEditMode)
+            }
+            btnSave.setOnClickListener {
+                gallery?.run {
+                    viewModel(AlbumEvent.SaveImages(args.id, checkedIds.toList()))
+                }
             }
         }
 
@@ -65,12 +69,20 @@ class AlbumFragment : Fragment() {
     private fun render(state: AlbumState) {
         when (state.mode) {
             AlbumMode.View -> {
+                binding?.run {
+                    btnEdit.visibility = View.GONE
+                    btnSave.visibility = View.VISIBLE
+                }
                 gallery?.run {
                     mode = GalleryMode.View
                     loadImages(args.imageIds?.toList())
                 }
             }
             AlbumMode.Edit -> {
+                binding?.run {
+                    btnSave.visibility = View.GONE
+                    btnEdit.visibility = View.VISIBLE
+                }
                 gallery?.run {
                     mode = GalleryMode.Edit
                     loadAllImages()

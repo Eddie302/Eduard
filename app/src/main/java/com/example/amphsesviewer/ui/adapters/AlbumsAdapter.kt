@@ -12,7 +12,7 @@ class AlbumsAdapter(private val context: Context?) : RecyclerView.Adapter<AlbumV
 
     var albums: List<Album> = ArrayList()
 
-    lateinit var itemClickCallback: (imageIds: List<Long>) -> Unit
+    lateinit var itemClickCallback: (album: Album) -> Unit
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.album_list_item_layout, parent, false)
@@ -23,7 +23,7 @@ class AlbumsAdapter(private val context: Context?) : RecyclerView.Adapter<AlbumV
         holder.itemView.run {
             setOnClickListener {
                 val position = holder.adapterPosition
-                itemClickCallback(albums[position].ImagesId)
+                itemClickCallback(albums[position])
             }
         }
     }

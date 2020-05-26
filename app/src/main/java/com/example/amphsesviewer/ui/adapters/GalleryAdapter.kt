@@ -2,11 +2,11 @@ package com.example.amphsesviewer.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.amphsesviewer.R
 import com.example.amphsesviewer.domain.model.ImageUI
+import com.example.amphsesviewer.ui.gallery.IGallery
 import com.example.amphsesviewer.ui.viewholders.ImageThumbnailViewHolder
 import kotlin.collections.ArrayList
 
@@ -15,6 +15,7 @@ class GalleryAdapter(private val context: Context?): RecyclerView.Adapter<ImageT
     lateinit var itemLongClickCallback: () -> Unit
     lateinit var itemClickCallback: (selectedItemPosition: Int, idList: List<Long>) -> Unit
     lateinit var itemSizeChangedCallback: () -> Unit
+    lateinit var editItemClickHandler: IGallery.EditItemClickHandler
 
     var images: List<ImageUI> = ArrayList()
     val checkedIds: HashSet<Long> = HashSet()
@@ -61,10 +62,12 @@ class GalleryAdapter(private val context: Context?): RecyclerView.Adapter<ImageT
                     val image = images[position]
 
                     if (!image.isChecked) {
-                        checkedIds.add(image.id)
+                        editItemClickHandler.setSelected(image.id)
+//                        checkedIds.add(image.id)
                         image.isChecked = true
                     } else {
-                        checkedIds.remove(image.id)
+                        editItemClickHandler.setUnselected(image.id)
+//                        checkedIds.remove(image.id)
                         image.isChecked = false
                     }
 

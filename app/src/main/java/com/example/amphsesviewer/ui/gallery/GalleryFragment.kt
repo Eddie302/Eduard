@@ -22,10 +22,22 @@ import com.example.amphsesviewer.ui.diffutils.ImageDiffUtilCallback
 import java.lang.ref.SoftReference
 import javax.inject.Inject
 
+
 class GalleryFragment : Fragment(), IGallery {
 
     private val longClickCallback: () -> Unit = {
         viewModel(GalleryEvent.SetEditMode)
+    }
+
+    private val editItemClickHandler = object : IGallery.EditItemClickHandler {
+        override fun setSelected(itemId: Long) {
+            checkedIds.add(itemId)
+        }
+
+        override fun setUnselected(itemId: Long) {
+            checkedIds.remove(itemId)
+        }
+
     }
 
     private val itemClickCallback = { selectedItemPosition: Int, idList: List<Long> ->
@@ -58,6 +70,7 @@ class GalleryFragment : Fragment(), IGallery {
         galleryAdapter = GalleryAdapter(context).apply {
             itemLongClickCallback = this@GalleryFragment.longClickCallback
             itemClickCallback = this@GalleryFragment.itemClickCallback
+            editItemClickHandler = this@GalleryFragment.editItemClickHandler
             itemSizeChangedCallback = this@GalleryFragment.itemSizeChangedCallback
         }
         viewModel.run {
@@ -161,7 +174,7 @@ class GalleryFragment : Fragment(), IGallery {
             }
         }
 
-    override val checkedIds: HashSet<Long> = HashSet()
+    override val checkedIds = HashSet<Long>()
 
     override lateinit var itemClickHandler: (selectedItemPosition: Int, idList: List<Long>) -> Unit
 }
