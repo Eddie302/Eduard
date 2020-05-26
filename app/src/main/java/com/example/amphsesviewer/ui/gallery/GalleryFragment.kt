@@ -29,11 +29,7 @@ class GalleryFragment : Fragment(), IGallery {
     }
 
     private val itemClickCallback = { selectedItemPosition: Int, idList: List<Long> ->
-        val action = GalleryFragmentDirections.actionNavGalleryToImageViewerFragment(
-            selectedItemPosition,
-            idList.toLongArray()
-        )
-        findNavController().navigate(action)
+        itemClickHandler(selectedItemPosition, idList)
     }
 
     private val itemSizeChangedCallback = {
@@ -127,8 +123,6 @@ class GalleryFragment : Fragment(), IGallery {
         }
 
         galleryAdapter.run{
-
-
             val imageList: List<ImageUI> = viewState.imagesMap.toSortedMap().map {
                 ImageUI(it.key, SoftReference(it.value))
             }
@@ -143,12 +137,15 @@ class GalleryFragment : Fragment(), IGallery {
     }
 
     private fun processAction(action: GalleryAction) = when (action) {
-        is GalleryAction.OpenImageLoader -> findNavController().navigate(R.id.action_nav_gallery_to_loadImage)
+        is GalleryAction.OpenImageLoader -> findNavController().navigate(R.id.action_albumFragment_to_loadImage)
         is GalleryAction.ShowError -> Toast.makeText(context, action.t.message, Toast.LENGTH_LONG).show()
     }
 
-    override fun loadImages(ids: List<Long>) {
-        viewModel(GalleryEvent.LoadImages(ids))
+    override fun loadImages(ids: List<Long>?) {
+        if (ids != null)
+            viewModel(GalleryEvent.LoadImages(ids))
+        else
+            viewModel(GalleryEvent.LoadAllImages)
     }
 
     override fun loadAllImages() {
@@ -163,4 +160,8 @@ class GalleryFragment : Fragment(), IGallery {
                 GalleryMode.View -> { viewModel(GalleryEvent.SetViewMode) }
             }
         }
+
+    override val checkedIds: HashSet<Long> = HashSet()
+
+    override lateinit var itemClickHandler: (selectedItemPosition: Int, idList: List<Long>) -> Unit
 }

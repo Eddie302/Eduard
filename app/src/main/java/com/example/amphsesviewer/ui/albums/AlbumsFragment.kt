@@ -1,6 +1,5 @@
 package com.example.amphsesviewer.ui.albums
 
-import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -35,9 +34,11 @@ class AlbumsFragment : Fragment() {
 
     private var binding: FragmentAlbumsBinding? = null
 
-    private val itemClickCallback = { imageIds: List<Long> ->
+    private val itemClickCallback = { imageIds: List<Long> -> navigateToAlbum(imageIds) }
+
+    private fun navigateToAlbum(imageIds: List<Long>? = null) {
         val action = AlbumsFragmentDirections.actionNavAlbumsToAlbumFragment(
-            imageIds.toLongArray()
+            imageIds?.toLongArray()
         )
         findNavController().navigate(action)
     }
@@ -64,6 +65,7 @@ class AlbumsFragment : Fragment() {
             rvAlbums.layoutManager = LinearLayoutManager(context)
             rvAlbums.adapter = albumsAdapter
             btnNewAlbum.setOnClickListener { viewModel(AlbumsEvent.NewAlbumClicked) }
+            btnAllImages.setOnClickListener { navigateToAlbum() }
         }
 
         return binding?.root
@@ -92,11 +94,11 @@ class AlbumsFragment : Fragment() {
             AlertDialog.Builder(it).run {
                 setView(view)
                 setTitle("new album")
-                setPositiveButton(R.string.dialog_ok) { dialog, which ->
+                setPositiveButton(R.string.dialog_ok) { dialog, _ ->
                     viewModel(AlbumsEvent.CreateNewAlbumClicked(view.findViewById<TextInputEditText>(R.id.edit_album_name).text.toString()))
                     dialog.dismiss()
                 }
-                setNegativeButton(R.string.dialog_cancel) { dialog, which ->
+                setNegativeButton(R.string.dialog_cancel) { dialog, _ ->
                     dialog.dismiss()
                 }
             }.create()

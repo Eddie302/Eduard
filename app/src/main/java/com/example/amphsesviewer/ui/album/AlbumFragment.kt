@@ -5,8 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.findFragment
+import androidx.navigation.fragment.findNavController
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
@@ -15,7 +14,6 @@ import com.example.amphsesviewer.R
 import com.example.amphsesviewer.databinding.FragmentAlbumBinding
 import com.example.amphsesviewer.feature.album.viewmodel.*
 import com.example.amphsesviewer.feature.di.FeatureComponentManager
-import com.example.amphsesviewer.ui.gallery.GalleryFragment
 import com.example.amphsesviewer.ui.gallery.GalleryMode
 import com.example.amphsesviewer.ui.gallery.IGallery
 import javax.inject.Inject
@@ -61,6 +59,7 @@ class AlbumFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         gallery = childFragmentManager.findFragmentById(R.id.fragmentGallery) as? IGallery
+        gallery?.itemClickHandler = this::navigateToImageViewer
     }
 
     private fun render(state: AlbumState) {
@@ -68,7 +67,7 @@ class AlbumFragment : Fragment() {
             AlbumMode.View -> {
                 gallery?.run {
                     mode = GalleryMode.View
-                    loadImages(args.imageIds.toList())
+                    loadImages(args.imageIds?.toList())
                 }
             }
             AlbumMode.Edit -> {
@@ -78,6 +77,14 @@ class AlbumFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun navigateToImageViewer(selectedItemPosition: Int, imageIds: List<Long>) {
+        val action = AlbumFragmentDirections.actionAlbumFragmentToImageViewerFragment(
+            selectedItemPosition,
+            imageIds.toLongArray()
+        )
+        findNavController().navigate(action)
     }
 
 }
