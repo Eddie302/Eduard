@@ -11,5 +11,5 @@ interface ImageAlbumDao {
     fun getAlbumWithImageIds(albumId: Long): AlbumWithImageIds
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(imageAlbum: ImageAlbumCrossRef)
+    fun insert(imageAlbum: ImageAlbumCrossRef): Long
 }

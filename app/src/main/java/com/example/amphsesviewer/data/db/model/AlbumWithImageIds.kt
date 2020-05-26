@@ -9,8 +9,12 @@ data class AlbumWithImageIds(
     @Relation(
         parentColumn = "albumId",
         entityColumn = "imageId",
-        entity = ImageAlbumCrossRef::class,
-        projection = ["imageId"]
+        entity = ImageSM::class,
+        associateBy = Junction(
+            value = ImageAlbumCrossRef::class,
+            parentColumn = "albumId",
+            entityColumn = "imageId"
+        )
     )
-    val imageIds: List<Long>
+    val images: List<ImageSM>
 )

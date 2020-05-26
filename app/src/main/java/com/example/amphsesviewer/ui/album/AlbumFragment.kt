@@ -64,14 +64,19 @@ class AlbumFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         gallery = childFragmentManager.findFragmentById(R.id.fragmentGallery) as? IGallery
         gallery?.itemClickHandler = this::navigateToImageViewer
+        gallery?.onImagesLoadedCallback = {
+            args.imageIds?.run {
+                gallery?.checkedIds = this.toHashSet()
+            }
+        }
     }
 
     private fun render(state: AlbumState) {
         when (state.mode) {
             AlbumMode.View -> {
                 binding?.run {
-                    btnEdit.visibility = View.GONE
-                    btnSave.visibility = View.VISIBLE
+                    btnSave.visibility = View.GONE
+                    btnEdit.visibility = View.VISIBLE
                 }
                 gallery?.run {
                     mode = GalleryMode.View
@@ -80,8 +85,8 @@ class AlbumFragment : Fragment() {
             }
             AlbumMode.Edit -> {
                 binding?.run {
-                    btnSave.visibility = View.GONE
-                    btnEdit.visibility = View.VISIBLE
+                    btnEdit.visibility = View.GONE
+                    btnSave.visibility = View.VISIBLE
                 }
                 gallery?.run {
                     mode = GalleryMode.Edit

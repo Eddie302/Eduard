@@ -17,8 +17,8 @@ class AlbumsDbSource @Inject constructor(
         return RxJavaBridge.toV3Observable(databaseStorage.albumDao().getAll())
             .flatMap {
                 Observable.fromIterable(it).map {
-                    val imagesIdList = databaseStorage.imageAlbumDao().getAlbumWithImageIds(it.albumId).imageIds
-                    Album(it.albumId, it.name, imagesIdList)
+                    val imagesId = databaseStorage.imageAlbumDao().getAlbumWithImageIds(it.albumId).images.map { it.imageId }
+                    Album(it.albumId, it.name, imagesId)
                 }.toList().toObservable()
             }
     }
@@ -31,6 +31,5 @@ class AlbumsDbSource @Inject constructor(
         imageIds.forEach {
             databaseStorage.imageAlbumDao().insert(ImageAlbumCrossRef(albumId, it))
         }
-
     }
 }

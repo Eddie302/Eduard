@@ -9,7 +9,7 @@ import com.example.amphsesviewer.data.db.model.AlbumSM
 import com.example.amphsesviewer.data.db.model.ImageAlbumCrossRef
 import com.example.amphsesviewer.data.db.model.ImageSM
 
-@Database(entities = [ImageSM::class, AlbumSM::class, ImageAlbumCrossRef::class], version = 5, exportSchema = false)
+@Database(entities = [ImageSM::class, AlbumSM::class, ImageAlbumCrossRef::class], version = 6, exportSchema = false)
 abstract class DatabaseStorage : RoomDatabase() {
     abstract fun imageDao() : ImageDao
     abstract fun albumDao() : AlbumDao

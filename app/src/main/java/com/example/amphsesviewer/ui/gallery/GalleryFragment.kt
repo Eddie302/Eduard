@@ -19,6 +19,7 @@ import com.example.amphsesviewer.feature.di.FeatureComponentManager
 import com.example.amphsesviewer.feature.gallery.viewmodel.*
 import com.example.amphsesviewer.ui.adapters.GalleryAdapter
 import com.example.amphsesviewer.ui.diffutils.ImageDiffUtilCallback
+import io.reactivex.rxjava3.core.Completable
 import java.lang.ref.SoftReference
 import javax.inject.Inject
 
@@ -152,6 +153,7 @@ class GalleryFragment : Fragment(), IGallery {
     private fun processAction(action: GalleryAction) = when (action) {
         is GalleryAction.OpenImageLoader -> findNavController().navigate(R.id.action_albumFragment_to_loadImage)
         is GalleryAction.ShowError -> Toast.makeText(context, action.t.message, Toast.LENGTH_LONG).show()
+        is GalleryAction.InvokeOnImagesLoaded -> onImagesLoadedCallback()
     }
 
     override fun loadImages(ids: List<Long>?) {
@@ -174,7 +176,16 @@ class GalleryFragment : Fragment(), IGallery {
             }
         }
 
-    override val checkedIds = HashSet<Long>()
+    override var checkedIds = HashSet<Long>()
+    set(value) {
+        field = value
+        galleryAdapter.images.forEach {
+            it.isChecked = checkedIds.contains(it.id)
+        }
+        galleryAdapter.notifyDataSetChanged()
+    }
+
+    override lateinit var onImagesLoadedCallback: () -> Unit
 
     override lateinit var itemClickHandler: (selectedItemPosition: Int, idList: List<Long>) -> Unit
 }

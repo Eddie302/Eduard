@@ -27,8 +27,8 @@ sealed class GalleryEvent : ViewEvent {
     object LoadAllImages: GalleryEvent()
 }
 
-sealed class GalleryAction:
-    ViewAction {
+sealed class GalleryAction: ViewAction {
+    object InvokeOnImagesLoaded: GalleryAction()
     object OpenImageLoader : GalleryAction()
     data class ShowError(val t: Throwable): GalleryAction()
 }
@@ -43,17 +43,6 @@ class GalleryViewModel(
     private val interactor: IGalleryInteractor,
     initState: GalleryState = GalleryState()
 ) : ViewModelBase<GalleryState, GalleryAction, GalleryEvent>(initState) {
-
-    init {
-//        val disposable = interactor.loadImagesData()
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribeBy(
-//                onNext = { processImageData(it) },
-//                onError = { sendAction(GalleryAction.ShowError(it)) }
-//            )
-//        compositeDisposable.add(disposable)
-    }
 
     private fun addBitmap (id: Long, bitmap: Bitmap?) {
         bitmap?.let {
@@ -84,6 +73,7 @@ class GalleryViewModel(
                 imagesMap = newMap
             )
         }
+        sendAction(GalleryAction.InvokeOnImagesLoaded)
     }
 
     private fun deleteImage(imageData: ImageData?) {
