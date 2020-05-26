@@ -18,39 +18,20 @@
         tools:layout="@layout/fragment_albums">
         <action
             android:id="@+id/action_nav_albums_to_albumFragment"
-            app:destination="@id/albumFragment" />
+            app:destination="@id/nav_album" />
     </fragment>
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.amphsesviewer.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery">
-        <action
-            android:id="@+id/action_nav_gallery_to_loadImage"
-            app:destination="@id/loadImage" />
-        <action
-            android:id="@+id/action_nav_gallery_to_imageViewerFragment"
-            app:destination="@id/imageViewerFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/loadImage"
+        android:id="@+id/nav_load_image"
         android:name="com.example.amphsesviewer.ui.loadimage.LoadImageFragment"
         android:label="load_image_fragment"
         tools:layout="@layout/load_image_fragment">
-        <action
-            android:id="@+id/action_loadImage_to_nav_gallery"
-            app:destination="@id/nav_gallery" />
     </fragment>
     <fragment
-        android:id="@+id/imageViewerFragment"
+        android:id="@+id/nav_image_viewer"
         android:name="com.example.amphsesviewer.ui.imageviewer.ImageViewerFragment"
         android:label="fragment_image_viewer"
         tools:layout="@layout/fragment_image_viewer">
-        <action
-            android:id="@+id/action_imageViewerFragment_to_nav_gallery"
-            app:destination="@id/nav_gallery" />
         <argument
             android:name="selectedItemPosition"
             app:argType="integer"
@@ -60,16 +41,20 @@
             app:argType="long[]" />
     </fragment>
     <fragment
-        android:id="@+id/albumFragment"
+        android:id="@+id/nav_album"
         android:name="com.example.amphsesviewer.ui.album.AlbumFragment"
         android:label="fragment_album"
         tools:layout="@layout/fragment_album" >
-        <action
-            android:id="@+id/action_albumFragment_to_nav_albums"
-            app:destination="@id/nav_albums" />
         <argument
             android:name="imageIds"
-            app:argType="long[]" />
+            app:argType="long[]"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_albumFragment_to_imageViewerFragment"
+            app:destination="@id/nav_image_viewer" />
+        <action
+            android:id="@+id/action_albumFragment_to_loadImage"
+            app:destination="@id/nav_load_image" />
     </fragment>
 
 </navigation>

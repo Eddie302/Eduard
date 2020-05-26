@@ -20,6 +20,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="new album"
+        app:layout_constraintBottom_toTopOf="@+id/btn_all_images" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_all_images"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="all images"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
