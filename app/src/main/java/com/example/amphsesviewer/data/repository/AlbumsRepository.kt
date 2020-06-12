@@ -21,10 +21,15 @@ class AlbumsRepository @Inject constructor(
         }
     }
 
-    override fun saveImages(albumId: Long, imageIds: List<Long>): Completable {
+    override fun addImages(albumId: Long, imageIds: List<Long>): Completable {
         return Completable.fromCallable {
-            albumsDbSource.saveImages(albumId, imageIds)
+            albumsDbSource.addImages(albumId, imageIds)
         }
     }
 
+    override fun removeImages(albumId: Long, imageIds: List<Long>): Completable {
+        return Completable.fromCallable {
+            albumsDbSource.removeImages(albumId, imageIds)
+        }
+    }
 }

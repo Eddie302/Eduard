@@ -1,7 +1,7 @@
 package com.example.amphsesviewer.ui.diffutils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.amphsesviewer.domain.model.ImageUI
+import com.example.amphsesviewer.ui.gallery.ImageUI
 
 class ImageDiffUtilCallback(
     private val oldList: List<ImageUI>,

@@ -25,6 +25,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var localBroadcastManager: LocalBroadcastManager
 
+    fun setToolbarTitle(title: String?) {
+        findViewById<Toolbar>(R.id.toolbar)?.title = title
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

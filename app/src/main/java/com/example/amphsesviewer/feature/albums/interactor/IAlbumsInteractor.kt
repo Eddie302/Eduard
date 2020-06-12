@@ -7,6 +7,6 @@ import io.reactivex.rxjava3.core.Observable
 interface IAlbumsInteractor {
     fun createAlbum(name: String): Completable
     fun createAlbum(name: String, imageIds: List<Long>)
-    fun saveImages(albumId: Long, imageIds: List<Long>): Completable
+    fun saveAlbumChanges(albumId: Long, oldImageIds: List<Long>, newImageIds: List<Long>): Completable
     fun loadAlbums(): Observable<List<Album>>
 }

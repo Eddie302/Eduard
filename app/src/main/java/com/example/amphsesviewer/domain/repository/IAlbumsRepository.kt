@@ -7,5 +7,6 @@ import io.reactivex.rxjava3.core.Observable
 interface IAlbumsRepository {
     fun loadAlbums(): Observable<List<Album>>
     fun createAlbum(name: String): Completable
-    fun saveImages(albumId: Long, imageIds: List<Long>): Completable
+    fun addImages(albumId: Long, imageIds: List<Long>): Completable
+    fun removeImages(albumId: Long, imageIds: List<Long>): Completable
 }

@@ -40,7 +40,7 @@ class AlbumsFragment : Fragment() {
     private fun navigateToAlbum(album: Album? = null) {
         val action = AlbumsFragmentDirections.actionNavAlbumsToAlbumFragment(
             album?.ImagesId?.toLongArray(),
-            album?.name,
+            album?.name ?: "All images",
             album?.id ?: ID_DEFAULT
         )
         findNavController().navigate(action)

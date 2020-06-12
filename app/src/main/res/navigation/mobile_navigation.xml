@@ -43,8 +43,8 @@
     <fragment
         android:id="@+id/nav_album"
         android:name="com.example.amphsesviewer.ui.album.AlbumFragment"
-        android:label="fragment_album"
-        tools:layout="@layout/fragment_album" >
+        android:label="{name}"
+        tools:layout="@layout/fragment_album">
         <argument
             android:name="imageIds"
             app:argType="long[]"
@@ -57,8 +57,7 @@
             app:destination="@id/nav_load_image" />
         <argument
             android:name="name"
-            app:argType="string"
-            app:nullable="true" />
+            app:argType="string" />
         <argument
             android:name="id"
             app:argType="long" />

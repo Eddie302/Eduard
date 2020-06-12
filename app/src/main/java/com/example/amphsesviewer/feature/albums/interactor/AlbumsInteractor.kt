@@ -19,11 +19,17 @@ class AlbumsInteractor @Inject constructor(
         return albumsRepository.createAlbum(name)
     }
 
-    override fun saveImages(albumId: Long, imageIds: List<Long>): Completable {
-        return albumsRepository.saveImages(albumId, imageIds)
-    }
-
     override fun loadAlbums(): Observable<List<Album>> {
         return albumsRepository.loadAlbums()
+    }
+
+    override fun saveAlbumChanges(albumId: Long, oldImageIds: List<Long>, newImageIds: List<Long>): Completable {
+        return if (oldImageIds.size > newImageIds.size) {
+            val diff = oldImageIds.subtract(newImageIds).toList()
+            albumsRepository.removeImages(albumId, diff)
+        } else {
+            val diff = newImageIds.subtract(oldImageIds).toList()
+            albumsRepository.addImages(albumId, diff)
+        }
     }
 }

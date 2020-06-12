@@ -5,14 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.amphsesviewer.R
-import com.example.amphsesviewer.domain.model.ImageUI
+import com.example.amphsesviewer.ui.gallery.ImageUI
 import com.example.amphsesviewer.ui.gallery.IGallery
 import com.example.amphsesviewer.ui.viewholders.ImageThumbnailViewHolder
 import kotlin.collections.ArrayList
 
 class GalleryAdapter(private val context: Context?): RecyclerView.Adapter<ImageThumbnailViewHolder>() {
 //    lateinit var itemLongClickCallback: (imageData: ImageUI) -> Unit
-    lateinit var itemLongClickCallback: () -> Unit
     lateinit var itemClickCallback: (selectedItemPosition: Int, idList: List<Long>) -> Unit
     lateinit var itemSizeChangedCallback: () -> Unit
     lateinit var editItemClickHandler: IGallery.EditItemClickHandler
@@ -47,15 +46,6 @@ class GalleryAdapter(private val context: Context?): RecyclerView.Adapter<ImageT
 
     override fun onViewAttachedToWindow(holder: ImageThumbnailViewHolder) {
         holder.itemView.run {
-            setOnLongClickListener {
-                val position = holder.adapterPosition
-                val image = images[position]
-                itemLongClickCallback()
-                checkedIds.add(image.id)
-                image.isChecked = true
-                false
-            }
-
             setOnClickListener {
                 if (isEditEnabled) {
                     val position = holder.adapterPosition
@@ -63,11 +53,9 @@ class GalleryAdapter(private val context: Context?): RecyclerView.Adapter<ImageT
 
                     if (!image.isChecked) {
                         editItemClickHandler.setSelected(image.id)
-//                        checkedIds.add(image.id)
                         image.isChecked = true
                     } else {
                         editItemClickHandler.setUnselected(image.id)
-//                        checkedIds.remove(image.id)
                         image.isChecked = false
                     }
 

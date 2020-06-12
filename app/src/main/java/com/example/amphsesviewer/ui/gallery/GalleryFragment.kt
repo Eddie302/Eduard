@@ -14,21 +14,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.amphsesviewer.R
 import com.example.amphsesviewer.databinding.FragmentGalleryBinding
-import com.example.amphsesviewer.domain.model.ImageUI
 import com.example.amphsesviewer.feature.di.FeatureComponentManager
 import com.example.amphsesviewer.feature.gallery.viewmodel.*
 import com.example.amphsesviewer.ui.adapters.GalleryAdapter
 import com.example.amphsesviewer.ui.diffutils.ImageDiffUtilCallback
-import io.reactivex.rxjava3.core.Completable
 import java.lang.ref.SoftReference
 import javax.inject.Inject
 
 
 class GalleryFragment : Fragment(), IGallery {
-
-    private val longClickCallback: () -> Unit = {
-        viewModel(GalleryEvent.SetEditMode)
-    }
 
     private val editItemClickHandler = object : IGallery.EditItemClickHandler {
         override fun setSelected(itemId: Long) {
@@ -38,7 +32,6 @@ class GalleryFragment : Fragment(), IGallery {
         override fun setUnselected(itemId: Long) {
             checkedIds.remove(itemId)
         }
-
     }
 
     private val itemClickCallback = { selectedItemPosition: Int, idList: List<Long> ->
@@ -69,7 +62,6 @@ class GalleryFragment : Fragment(), IGallery {
     ): View? {
         val layoutManager = GridLayoutManager(context, 2)
         galleryAdapter = GalleryAdapter(context).apply {
-            itemLongClickCallback = this@GalleryFragment.longClickCallback
             itemClickCallback = this@GalleryFragment.itemClickCallback
             editItemClickHandler = this@GalleryFragment.editItemClickHandler
             itemSizeChangedCallback = this@GalleryFragment.itemSizeChangedCallback
@@ -85,8 +77,8 @@ class GalleryFragment : Fragment(), IGallery {
         }
         binding = FragmentGalleryBinding.inflate(inflater, container, false)
         return binding?.apply {
-            this.btnLoad.setOnClickListener { viewModel(GalleryEvent.LoadClicked) }
-            this.btnDelete.setOnClickListener { viewModel(GalleryEvent.DeleteClicked(galleryAdapter.checkedIds.toList())) }
+//            this.btnLoad.setOnClickListener { viewModel(GalleryEvent.LoadClicked) }
+//            this.btnDelete.setOnClickListener { viewModel(GalleryEvent.DeleteClicked(galleryAdapter.checkedIds.toList())) }
             this.rvImages.layoutManager = layoutManager
             this.rvImages.adapter = galleryAdapter
 
@@ -117,28 +109,29 @@ class GalleryFragment : Fragment(), IGallery {
         when (viewState.mode) {
             GalleryMode.View -> {
                 galleryAdapter.isEditEnabled = false
-                galleryAdapter.itemLongClickCallback = this@GalleryFragment.longClickCallback
 
                 binding?.run {
-                    btnDelete.visibility = View.GONE
-                    btnLoad.visibility = View.VISIBLE
+//                    btnDelete.visibility = View.GONE
+//                    btnLoad.visibility = View.VISIBLE
                 }
             }
             GalleryMode.Edit -> {
                 binding?.run {
-                    btnLoad.visibility = View.GONE
-                    btnDelete.visibility = View.VISIBLE
+//                    btnLoad.visibility = View.GONE
+//                    btnDelete.visibility = View.VISIBLE
                 }
                 galleryAdapter.run {
                     isEditEnabled = true
-                    itemLongClickCallback = {}
                 }
             }
         }
 
         galleryAdapter.run{
             val imageList: List<ImageUI> = viewState.imagesMap.toSortedMap().map {
-                ImageUI(it.key, SoftReference(it.value))
+                ImageUI(
+                    it.key,
+                    SoftReference(it.value)
+                )
             }
             val diffUtilCallback = ImageDiffUtilCallback(images, imageList)
             val result = DiffUtil.calculateDiff(diffUtilCallback)
@@ -177,15 +170,18 @@ class GalleryFragment : Fragment(), IGallery {
         }
 
     override var checkedIds = HashSet<Long>()
-    set(value) {
-        field = value
-        galleryAdapter.images.forEach {
-            it.isChecked = checkedIds.contains(it.id)
+        set(value) {
+            field = value
+            galleryAdapter.images.forEach {
+                it.isChecked = checkedIds.contains(it.id)
+            }
+            galleryAdapter.notifyDataSetChanged()
         }
-        galleryAdapter.notifyDataSetChanged()
+
+    override fun deleteImages(imageIds: List<Long>) {
+        viewModel(GalleryEvent.DeleteClicked(imageIds))
     }
 
     override lateinit var onImagesLoadedCallback: () -> Unit
-
     override lateinit var itemClickHandler: (selectedItemPosition: Int, idList: List<Long>) -> Unit
 }

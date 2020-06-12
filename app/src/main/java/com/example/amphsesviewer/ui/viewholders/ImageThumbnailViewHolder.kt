@@ -7,7 +7,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.recyclerview.widget.RecyclerView
 import com.example.amphsesviewer.R
-import com.example.amphsesviewer.domain.model.ImageUI
+import com.example.amphsesviewer.ui.gallery.ImageUI
 
 class ImageThumbnailViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
     fun bind(imageUI: ImageUI, isEdit: Boolean) {

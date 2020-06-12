@@ -13,6 +13,7 @@ class AlbumsDbSource @Inject constructor(
     private val databaseStorage: DatabaseStorage
 ) : IAlbumsDbSource {
 
+
     override fun loadAlbums(): Observable<List<Album>> {
         return RxJavaBridge.toV3Observable(databaseStorage.albumDao().getAll())
             .flatMap {
@@ -27,9 +28,15 @@ class AlbumsDbSource @Inject constructor(
         databaseStorage.albumDao().insert(AlbumSM(name = name))
     }
 
-    override fun saveImages(albumId: Long, imageIds: List<Long>) {
+    override fun addImages(albumId: Long, imageIds: List<Long>) {
         imageIds.forEach {
             databaseStorage.imageAlbumDao().insert(ImageAlbumCrossRef(albumId, it))
+        }
+    }
+
+    override fun removeImages(albumId: Long, imageIds: List<Long>) {
+        imageIds.forEach {
+            databaseStorage.imageAlbumDao().delete(ImageAlbumCrossRef(albumId, it))
         }
     }
 }

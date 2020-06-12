@@ -9,8 +9,10 @@ interface IGallery {
         fun setUnselected(itemId: Long)
     }
 
-    fun loadImages(ids: List<Long>?)
+    fun loadImages(imageIds: List<Long>?)
     fun loadAllImages()
+    fun deleteImages(imageIds: List<Long>)
+
     var mode: GalleryMode
     var checkedIds: HashSet<Long>
 

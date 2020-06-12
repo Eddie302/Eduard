@@ -12,4 +12,7 @@ interface ImageAlbumDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(imageAlbum: ImageAlbumCrossRef): Long
+
+    @Delete
+    fun delete(imageAlbum: ImageAlbumCrossRef)
 }

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -18,20 +19,12 @@ import com.example.amphsesviewer.ui.gallery.GalleryMode
 import com.example.amphsesviewer.ui.gallery.IGallery
 import javax.inject.Inject
 
-/**
- * A simple [Fragment] subclass.
- */
+
 class AlbumFragment : Fragment() {
-
     private var binding: FragmentAlbumBinding? = null
-
     private val args: AlbumFragmentArgs by navArgs()
-
     var gallery: IGallery? = null
-
-    @Inject
-    lateinit var albumViewModelFactory: AlbumViewModelFactory
-
+    @Inject lateinit var albumViewModelFactory: AlbumViewModelFactory
     private val viewModel: AlbumViewModel by viewModels { albumViewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +38,7 @@ class AlbumFragment : Fragment() {
     ): View? {
         viewModel.run {
             viewState.observe(viewLifecycleOwner, Observer { render(it) })
+            action.observe(viewLifecycleOwner, Observer { processAction(it) })
         }
 
         binding = FragmentAlbumBinding.inflate(inflater, container, false).apply {
@@ -52,8 +46,13 @@ class AlbumFragment : Fragment() {
                 viewModel(AlbumEvent.SetEditMode)
             }
             btnSave.setOnClickListener {
-                gallery?.run {
-                    viewModel(AlbumEvent.SaveImages(args.id, checkedIds.toList()))
+                gallery?.checkedIds?.toList()?.let { newImageIds ->
+                    viewModel(AlbumEvent.SaveToAlbumClicked(args.id, newImageIds))
+                }
+            }
+            btnDelete.setOnClickListener {
+                gallery?.checkedIds?.toList()?.let { imageIds ->
+                    viewModel(AlbumEvent.DeleteImagesClicked(imageIds))
                 }
             }
         }
@@ -64,9 +63,20 @@ class AlbumFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         gallery = childFragmentManager.findFragmentById(R.id.fragmentGallery) as? IGallery
         gallery?.itemClickHandler = this::navigateToImageViewer
-        gallery?.onImagesLoadedCallback = {
-            args.imageIds?.run {
-                gallery?.checkedIds = this.toHashSet()
+        gallery?.onImagesLoadedCallback = { viewModel(AlbumEvent.ImagesLoaded) }
+        viewModel(AlbumEvent.ViewCreated(args.imageIds?.toList()))
+    }
+
+    private fun processAction(action: AlbumAction) {
+        when(action) {
+            is AlbumAction.GoBack -> findNavController().popBackStack()
+            is AlbumAction.SetCheckedImages -> {
+                action.imageIds?.run {
+                    gallery?.checkedIds = this.toHashSet()
+                }
+            }
+            is AlbumAction.DeleteImages -> {
+                gallery?.deleteImages(action.imageIds)
             }
         }
     }
@@ -75,18 +85,25 @@ class AlbumFragment : Fragment() {
         when (state.mode) {
             AlbumMode.View -> {
                 binding?.run {
-                    btnSave.visibility = View.GONE
-                    btnEdit.visibility = View.VISIBLE
+                    btnSave.isVisible = false
+                    btnDelete.isVisible = false
+                    btnEdit.isVisible = true
                 }
                 gallery?.run {
                     mode = GalleryMode.View
-                    loadImages(args.imageIds?.toList())
+                    loadImages(state.imageIds?.toList())
                 }
             }
             AlbumMode.Edit -> {
                 binding?.run {
-                    btnEdit.visibility = View.GONE
-                    btnSave.visibility = View.VISIBLE
+                    btnEdit.isVisible = false
+                    if (state.imageIds != null) {
+                        btnDelete.isVisible = false
+                        btnSave.isVisible = true
+                    } else {
+                        btnSave.isVisible = false
+                        btnDelete.isVisible = true
+                    }
                 }
                 gallery?.run {
                     mode = GalleryMode.Edit

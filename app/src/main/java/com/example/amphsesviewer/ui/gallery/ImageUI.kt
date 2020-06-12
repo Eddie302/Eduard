@@ -1,4 +1,4 @@
-package com.example.amphsesviewer.domain.model
+package com.example.amphsesviewer.ui.gallery
 
 import android.graphics.Bitmap
 import java.lang.ref.SoftReference
