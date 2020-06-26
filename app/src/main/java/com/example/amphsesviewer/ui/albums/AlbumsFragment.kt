@@ -1,10 +1,8 @@
 package com.example.amphsesviewer.ui.albums
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
@@ -67,11 +65,22 @@ class AlbumsFragment : Fragment() {
         binding = FragmentAlbumsBinding.inflate(inflater, container, false).apply {
             rvAlbums.layoutManager = LinearLayoutManager(context)
             rvAlbums.adapter = albumsAdapter
-            btnNewAlbum.setOnClickListener { viewModel(AlbumsEvent.NewAlbumClicked) }
             btnAllImages.setOnClickListener { navigateToAlbum() }
         }
 
+        setHasOptionsMenu(true)
         return binding?.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_albums, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_new -> { viewModel(AlbumsEvent.NewAlbumClicked) }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun render(viewState: AlbumsState) {

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
@@ -16,10 +17,16 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.fragment.navArgs
+import androidx.navigation.navArgs
+import com.example.amphsesviewer.ui.album.AlbumFragmentArgs
+import kotlinx.android.synthetic.main.activity_main.*
 
 const val REQUEST_GALLERY = 0
 
 class MainActivity : AppCompatActivity() {
+
+    private val args: MainActivityArgs by navArgs()
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -35,6 +42,9 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         localBroadcastManager = LocalBroadcastManager.getInstance(applicationContext)
+
+        val user = args.User
+        nav_view.getHeaderView(0).findViewById<TextView>(R.id.txt_user_name).text = user.userName
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)

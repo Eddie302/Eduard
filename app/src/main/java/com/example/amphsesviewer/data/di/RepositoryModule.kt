@@ -1,11 +1,11 @@
 package com.example.amphsesviewer.data.di
 
-import com.example.amphsesviewer.data.datasource.interfaces.IAlbumsDbSource
-import com.example.amphsesviewer.data.datasource.interfaces.IImageDataDbSource
-import com.example.amphsesviewer.data.datasource.interfaces.IInternalStorageDataSource
+import com.example.amphsesviewer.data.datasource.interfaces.*
 import com.example.amphsesviewer.data.repository.AlbumsRepository
+import com.example.amphsesviewer.data.repository.AuthRepository
 import com.example.amphsesviewer.data.repository.ImageRepository
 import com.example.amphsesviewer.domain.repository.IAlbumsRepository
+import com.example.amphsesviewer.domain.repository.IAuthRepository
 import com.example.amphsesviewer.domain.repository.IImageRepository
 import dagger.Module
 import dagger.Provides
@@ -24,5 +24,11 @@ class RepositoryModule {
     @Provides
     fun provideAlbumsRepository(albumsDbSource: IAlbumsDbSource): IAlbumsRepository {
         return AlbumsRepository(albumsDbSource)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAuthRepository(authDataSource: IAuthFirebaseSource, userDataSource: IUserFirestoreSource): IAuthRepository {
+        return AuthRepository(authDataSource, userDataSource)
     }
 }

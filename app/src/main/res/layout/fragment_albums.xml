@@ -10,19 +10,12 @@
         android:id="@+id/rv_albums"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_new_album"
+        app:layout_constraintBottom_toTopOf="@id/btn_all_images"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </androidx.recyclerview.widget.RecyclerView>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_new_album"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="new album"
-        app:layout_constraintBottom_toTopOf="@+id/btn_all_images" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_all_images"

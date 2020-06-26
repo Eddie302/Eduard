@@ -5,6 +5,8 @@ import com.example.amphsesviewer.data.di.DataComponent
 import com.example.amphsesviewer.data.di.DataDependency
 import com.example.amphsesviewer.ui.album.AlbumFragment
 import com.example.amphsesviewer.ui.albums.AlbumsFragment
+import com.example.amphsesviewer.ui.auth.SignInFragment
+import com.example.amphsesviewer.ui.auth.SignUpFragment
 import com.example.amphsesviewer.ui.gallery.GalleryFragment
 import com.example.amphsesviewer.ui.imageviewer.ImageViewerFragment
 import com.example.amphsesviewer.ui.loadimage.LoadImageFragment
@@ -19,6 +21,8 @@ interface FeatureComponent {
     fun inject(galleryFragment: GalleryFragment)
     fun inject(loadImageFragment: LoadImageFragment)
     fun inject(imageViewerFragment: ImageViewerFragment)
+    fun inject(signInFragment: SignInFragment)
+    fun inject(signUpFragment: SignUpFragment)
 
 
     companion object {

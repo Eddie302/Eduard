@@ -3,6 +3,9 @@ package com.example.amphsesviewer.feature.di
 import com.example.amphsesviewer.feature.album.viewmodel.AlbumViewModelFactory
 import com.example.amphsesviewer.feature.albums.interactor.IAlbumsInteractor
 import com.example.amphsesviewer.feature.albums.viewmodel.AlbumsViewModelFactory
+import com.example.amphsesviewer.feature.auth.interactor.IAuthInteractor
+import com.example.amphsesviewer.feature.auth.signin.viewmodel.SignInViewModelFactory
+import com.example.amphsesviewer.feature.auth.signup.viewmodel.SignUpViewModelFactory
 import com.example.amphsesviewer.feature.gallery.interactor.IGalleryInteractor
 import com.example.amphsesviewer.feature.gallery.viewmodel.GalleryViewModelFactory
 import com.example.amphsesviewer.feature.imageviewer.interactor.IImageViewerInteractor
@@ -45,5 +48,15 @@ class FeatureModelProviderModule {
     @Provides
     fun provideAlbumViewModelFactory(interactor: IAlbumsInteractor): AlbumViewModelFactory {
         return AlbumViewModelFactory(interactor)
+    }
+
+    @Provides
+    fun provideSignInModelFactory(interactor: IAuthInteractor): SignInViewModelFactory {
+        return SignInViewModelFactory(interactor)
+    }
+
+    @Provides
+    fun provideSignUnModelFactory(interactor: IAuthInteractor): SignUpViewModelFactory {
+        return SignUpViewModelFactory(interactor)
     }
 }

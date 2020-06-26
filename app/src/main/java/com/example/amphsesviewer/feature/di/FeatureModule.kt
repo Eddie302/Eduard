@@ -1,9 +1,12 @@
 package com.example.amphsesviewer.feature.di
 
 import com.example.amphsesviewer.domain.repository.IAlbumsRepository
+import com.example.amphsesviewer.domain.repository.IAuthRepository
 import com.example.amphsesviewer.domain.repository.IImageRepository
 import com.example.amphsesviewer.feature.albums.interactor.AlbumsInteractor
 import com.example.amphsesviewer.feature.albums.interactor.IAlbumsInteractor
+import com.example.amphsesviewer.feature.auth.interactor.AuthInteractor
+import com.example.amphsesviewer.feature.auth.interactor.IAuthInteractor
 import com.example.amphsesviewer.feature.gallery.interactor.GalleryInteractor
 import com.example.amphsesviewer.feature.gallery.interactor.IGalleryInteractor
 import com.example.amphsesviewer.feature.imageviewer.interactor.IImageViewerInteractor
@@ -34,5 +37,10 @@ class FeatureModule {
     @Provides
     fun provideAlbumsFeature(repository: IAlbumsRepository) : IAlbumsInteractor {
         return AlbumsInteractor(repository)
+    }
+
+    @Provides
+    fun provideAuthFeature(repository: IAuthRepository) : IAuthInteractor {
+        return AuthInteractor(repository)
     }
 }
